@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--Let browser know website is optimized for mobile-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="css/css.css" />
+  <script src="js/script.js" defer></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" />
+
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+</head>
+
+<body class="container">
+  <header>
+    <div class="row">
+      <!-- sidebar -->
+      <div class="col s2">
+        <ul id="slide-out" class="sidenav">
+          <li class="navshow" id="register" onclick="fre()"><a class="waves-effect" href="#registerpage"><i
+                class="material-icons">account_box</i>Register</a>
+          </li>
+          <li class="navshow" id="login" onclick="flogin()"><a class="waves-effect" href="#registerpage"><i
+                class="material-icons">account_box</i>Log In</a>
+          </li>
+          <li class="navshow" id="logout" onclick="flogout()"><a class="waves-effect" href="#registerpage"><i
+                class="material-icons">account_box</i>Log Out</a>
+          </li>
+          <li class="navshow" id="home" onclick="fho()"><a class="waves-effect" href="#homepage"><i
+                class="material-icons">home</i>Home</a>
+          </li>
+          <li class="navshow" id="program" onclick="fpr()"><a class="waves-effect" href="#programpage"><i
+                class="material-icons">view_list</i>Programs</a>
+          </li>
+          <li class="navshow" id="classes" onclick="fcl()"><a class="waves-effect" href="#classpage"><i
+                class="material-icons">access_time</i>Search
+              Classes</a></li>
+          <li class="navshow" id="enroll" onclick="fen()"><a class="waves-effect" href="#enrollpage"><i
+                class="material-icons">filter_center_focus</i>Enroll</a>
+          </li>
+          <li class="navshow" id="myclass" onclick="fmy()"><a class="waves-effect" href="#myclasspage"><i
+                class="material-icons">class</i>My
+              Class</a></li>
+          <li class="navshow" id="contact" onclick="fco()"><a class="waves-effect" href="#contactpage"><i
+                class="material-icons">contact_phone</i>Contact</a>
+          </li>
+          <li>
+            <div class="divider"></div>
+          </li>
+          <li class="navshow" id="setting" onclick="fse()"><a class="waves-effect" href="#settingpage"><i
+                class="material-icons">settings</i>Account
+              Setting</a></li>
+        </ul>
+        <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons"
+            style="padding: 10px; transform: scale(2);">menu</i></a>
+      </div>
+      <div class="col s10">
+        <img width="80px" height="80px" src="images/swim.png" alt="logo" />
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <!-- register page-->
+    <div class="display" id="registerpage">
+      <h5>Register to be Student</h5>
+      <fieldset class="section container">
+        <div class="row">
+          <div class="col s12">
+            <!-- username -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">people</i>
+                <input class="validate" id="un" type="text" title="user name" pattern="(?!.*fuck)[A-Za-z]{3,128}"
+                  name="user name" required />
+                <label for="un">User Name</label>
+                <div class="error" id="errorun">
+                  Please enter a valid username
+                </div>
+              </div>
+            </div>
+            <!-- email -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">email</i>
+                <input class="em validate" id="em" type="email" pattern="a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                  title="email" name="email" required />
+                <label for="em">Email</label>
+                <!-- <span class="helper-text" data-error="wrong" data-success="right">Helper text</span> -->
+                <div class="error" id="errorem">Please enter a valid Email</div>
+              </div>
+            </div>
+            <!-- password1 -->
+            <a class="btn-flat tooltipped" data-position="bottom"
+              data-tooltip="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">password
+              rules</a>
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key</i>
+                <input id="psw1" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  minlength="8" required>
+                <label for="psw1">Password</label>
+                <div class="error" id="errorpsw1">
+                  <p>Password must contain the following:</p>
+                  <p>A <b>lowercase</b> letter</p>
+                  <p>A <b>capital (uppercase)</b> letter</p>
+                  <p>A <b>number</b></p>
+                  <p>Minimum <b>8 characters</b></p>
+                </div>
+              </div>
+            </div>
+            <!-- password2 -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key</i>
+                <input id="psw2" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  minlength="8" required>
+                <label for="psw2">Password Again</label>
+                <div class="error" id="errorpsw2">
+                  <p>Password must contain the following:</p>
+                  <p class="invalid">A <b>lowercase</b> letter</p>
+                  <p class="invalid">A <b>capital (uppercase)</b> letter</p>
+                  <p class="invalid">A <b>number</b></p>
+                  <p class="invalid">Minimum <b>8 characters</b></p>
+                </div>
+                <div class="error" id="samepsw">
+                  <p>Two passwords are not same.</p>
+                </div>
+              </div>
+              <button class="btn light-blue" onclick="revealPasswords()" type="button" style="margin-left: 20px;"><i
+                  class="material-icons">remove_red_eye</i></button>
+            </div>
+
+            <button class="btn-floating btn-large pulse light-blue" type="submit" name="action"
+              onclick="validateReg(event)">Go
+            </button>
+      </fieldset>
+    </div>
+
+    <!-- login page -->
+    <div class="display row" id="loginpage">
+      <h5>Log In</h5>
+      <fieldset class="section">
+        <div class="row">
+          <div class="col s12">
+            <!-- username -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">people</i>
+                <input class="validate" id="unb" type="text" title="user name" pattern="(?!.*fuck)[A-Za-z]{3,128}"
+                  name="user name" required />
+                <label for="unb">User Name</label>
+              </div>
+            </div>
+            <!-- password -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key</i>
+                <input id="psw1b" type="password" class="validate" minlength="3" required>
+                <label for="psw1b">Password</label>
+              </div>
+            </div>
+            <!-- remeber me -->
+            <label>
+              <input type="checkbox" class="filled-in" checked="checked" />
+              <span>Remeber Me</span>
+            </label>
+
+            <button class="btn waves-effect waves-light light-blue" type="submit" name="action"
+              onclick="submitLogin(event)">Submit
+              <i class="material-icons right">send</i>
+            </button>
+
+            <div id="welcomearea"></div>
+      </fieldset>
+
+    </div>
+
+    <!-- homepage -->
+    <div class="display" id="homepage">
+      <div class="row">
+        <div class="col s12" style="text-align:justify">
+          <h5>Bright Star Swim School</h5>
+          <p class="flow-text">Over 20 years of teaching experience has helped to mould our quality,
+            comprehensive
+            swimming program. Bright Star endeavours to deliver a high teaching standard of water safety, learn to swim
+            and squad programs. We assist children in developing a lifelong love of swimming.</p>
+          <p class="flow-text">Our mission is to provide a standard of excellence in teaching babies and children water
+            safety and learn to swim. With over 20 years of experience, a quality swimming program, professional
+            AUSTSWIM qualified teachers, comprehensive facilities, and convenient locations, Bright Star is committed to
+            providing your
+            family the very best!</p>
+        </div>
+        <div class="row">
+          <div class="col s12 m4">
+            <div class="card">
+              <div class="card-image">
+                <img src="images/1.jpg">
+                <span class="card-title">Why Choose Us</span>
+              </div>
+              <div class="card-content">
+                <p><i class="material-icons">star_border</i> Smaller class sizes</p>
+                <p><i class="material-icons">star_border</i> Regular feedback to parents</p>
+                <p><i class="material-icons">star_border</i> Indoor heated pool</p>
+                <p><i class="material-icons">star_border</i> Free Assessments</p>
+                <p><i class="material-icons">star_border</i> Free Orientations</p>
+              </div>
+            </div>
+          </div>
+          <div class="col s12 m4">
+            <div class="card">
+              <div class="card-image">
+                <img src="images/2.jpg">
+                <span class="card-title">Our Programs</span>
+              </div>
+              <div class="card-content">
+                <p>Our programs assist children in developing
+                  a lifelong love of swimming.</p>
+              </div>
+              <div class="card-action">
+                <a href="#programpage" onclick="fpr()">read more</a>
+              </div>
+            </div>
+          </div>
+          <div class="col s12 m4">
+            <div class="card">
+              <div class="card-image">
+                <img src="images/3.jpg">
+                <span class="card-title">Contact</span>
+              </div>
+              <div class="card-content">
+                <p>We are open from Monday to Sunday.</p>
+              </div>
+              <div class="card-action">
+                <a href="#contactpage" onclick="fco()">find us</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- program intro page-->
+    <div class="display" id="programpage">
+      <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-image">
+              <img src="images/1.jpg">
+              <span class="card-title">Parent & Baby</span>
+            </div>
+            <div class="card-content">
+              <h5>6 Months to 3 Years Old</h5>
+              <p>Parent & Baby is focused on developing trust between parent and child in the water, while
+                re-enforcing safety skills in and around the water</p>
+              <h6>requirement:</h6>
+              <p>none</p>
+            </div>
+            <div class="card-action">
+              <a href="#enrollpage" onclick="fen()">enroll now</a>
+            </div>
+          </div>
+        </div>
+        <div class="col s12">
+          <div class="card">
+            <div class="card-image">
+              <img src="images/1.jpg">
+              <span class="card-title">Parent & Baby</span>
+            </div>
+            <div class="card-content">
+              <h5>6 Months to 3 Years Old</h5>
+              <p>Parent & Baby is focused on developing trust between parent and child in the water, while
+                re-enforcing safety skills in and around the water</p>
+              <h6>requirement:</h6>
+              <p>none</p>
+            </div>
+            <div class="card-action">
+              <a href="#enrollpage" onclick="fen()">enroll now</a>
+            </div>
+          </div>
+        </div>
+        <div class="col s12">
+          <div class="card">
+            <div class="card-image">
+              <img src="images/1.jpg">
+              <span class="card-title">Parent & Baby</span>
+            </div>
+            <div class="card-content">
+              <h5>6 Months to 3 Years Old</h5>
+              <p>Parent & Baby is focused on developing trust between parent and child in the water, while
+                re-enforcing safety skills in and around the water</p>
+              <h6>requirement:</h6>
+              <p>none</p>
+            </div>
+            <div class="card-action">
+              <a href="#enrollpage" onclick="fen()">enroll now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- all classes page-->
+    <div class="display" id="classpage">
+      <h5>Search Classes</h5>
+      <!-- program filter -->
+      <div class="row">
+        <div class="input-field col s6">
+          <select>
+            <option value="" disabled selected>by program</option>
+            <option value="1">All</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+        </div>
+        <!-- class-time filter -->
+        <div class="input-field col s6">
+          <select>
+            <option value="" disabled selected>by time</option>
+            <option value="1">All</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" id="classbtn">
+        <div class="input-field col s4 offset-s8">
+          <a class="waves-effect waves-light btn light-blue">search</a>
+        </div>
+        <!-- <div class="input-field col s6">
+          <a class="waves-effect waves-light btn light-blue">show all</a>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- enroll page -->
+    <div id="enrollpage" class="display">
+      <h5>Enroll a Class</h5>
+      <fieldset class="section container">
+        <div class="row">
+          <div class="col s12">
+            <!-- first name -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">child_care</i>
+                <input class="validate" id="fn" type="text" title="first name" pattern="(?!.*fuck)[A-Za-z]{3,128}"
+                  name="first name" required />
+                <label for="fn">Student's First Name</label>
+                <div class="error" id="errorfn">
+                  Please enter a valid first name
+                </div>
+              </div>
+            </div>
+            <!-- last name -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input class="validate" id="ln" type="text" title="last name" pattern="(?!.*fuck)[A-Za-z]{3,128}"
+                  name="last name" required />
+                <label for="ln">Student's Last Name</label>
+                <div class="error" id="errorln">
+                  Please enter a valid first name
+                </div>
+              </div>
+            </div>
+            <!-- gender -->
+            <div class="row" id="gender">
+              <i class="material-icons">wc</i>
+              <p>
+                <label>
+                  <input class="with-gap gender" name="group" type="radio" />
+                  <span>male</span>
+                </label>
+              </p>
+              <p>
+                <label>
+                  <input class="with-gap gender" name="group" type="radio" />
+                  <span>female</span>
+                </label>
+              </p>
+              <p>
+                <label>
+                  <input class="with-gap gender" name="group" type="radio" />
+                  <span>other</span>
+                </label>
+              </p>
+              <div class="error" id="errorgender"></div>
+            </div>
+            <!-- birthdate -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">cake</i>
+                <input type="text" class="datepicker validate" id="dob" type="date" title="date of birth"
+                  name="date of birth" max="August 01,2020" required />
+                <label for="dob">Date of Birth</label>
+                <div class="error" id="errordob">
+                  Please input a valid data of birth
+                </div>
+              </div>
+            </div>
+            <!-- phone -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">phone</i>
+                <input class="validate" id="p2" type="text" pattern="[0-9{6}" minlength="6" maxlength="20" title="phone"
+                  name="phone" required />
+                <label for="p2">Phone</label>
+                <div class="error" id="errorp2">Please enter a valid phone</div>
+              </div>
+            </div>
+            <!-- address -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">account_balance</i>
+                <input class="validate" id="ad" type="text" pattern="[0-9{6}" minlength="6" maxlength="20"
+                  title="address" name="address" required />
+                <label for="ad">Address</label>
+                <div class="error" id="errorad">Please enter a valid address</div>
+              </div>
+            </div>
+            <!-- program  -->
+            <div class="input-field col s12">
+              <select id="pro" required>
+                <option value="" disabled selected>Choose Program</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+                <option value="4">Option 4</option>
+                <option value="5">Option 5</option>
+                <option value="6">Option 6</option>
+              </select>
+              <div class="error" id="errorpro">Please choose a program</div>
+            </div>
+            <!-- class -->
+            <div class="input-field col s12">
+              <select id="cla" required>
+                <option value="" disabled selected>Choose Class Time</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+                <option value="4">Option 4</option>
+                <option value="5">Option 5</option>
+                <option value="6">Option 6</option>
+              </select>
+              <div class="error" id="errorcla">Please choose a class time</div>
+            </div>
+            <!-- special health conditions -->
+            <div class="col s12">
+              <div class="row">
+                <div class="input-field col s12">
+                  <i class="material-icons prefix">mode_edit</i>
+                  <textarea id="textarea2" class="materialize-textarea" data-length="200"></textarea>
+                  <label for="textarea2">Special Health Conditions</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Trigger + waves effect -->
+            <a class="waves-effect waves-light btn modal-trigger light-blue" href="#modal1"
+              style="margin-left:10px;">Policies</a>
+            <!-- Modal Structure -->
+            <div id="modal1" class="modal">
+              <div class="modal-content">
+                <h4>Policies</h4>
+                <p>All children under the age of 3, or those who are not fully potty-trained regardless of age, must
+                  wear a fitted, reusable swim diaper. Cloth diapers, regular disposable diapers, or commercial swim
+                  diapers (Huggies, Little Swimmers, or Pampers Splashers) are NOT acceptable.</p>
+                <p>All families will be charged an on time registration fee. This fee is good until you drop out of the
+                  program.</p>
+                <p>I understand, agree, and acknowledge that there are risks inherent in sports activities conducted by
+                  Bright Star Swim School, including but not limited to paralyzing injuries, brain injuries, and death.
+                  These activities may be of a hazardous nature and/or may include activities such as swimming, diving,
+                  a variety of strenuous exercise and physical activities. I willingly agree to comply with the stated
+                  and customary terms and conditions for participation. If, however, I observe any unusual significant
+                  hazard during my presence or participation, I will remove myself from participation and bring such to
+                  the attention of Bright Star Swim School immediately.</p>
+                <p>I hereby authorize any representatives of Bright Star to have the participant treated in any medical
+                  emergency during his/her participation in the Activities. Further, the participant and/or
+                  parent/guardian agrees to pay all costs associated with medical care for and transportation of the
+                  participant. I have notified the Bright Star in writing of any
+                  medical/health problems of which the Bright Star' staff should be aware prior to participating in the
+                  Activities.</p>
+              </div>
+              <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">ok, i understand</a>
+              </div>
+            </div>
+
+            <!-- checkbox -->
+            <div id="terms">
+              <label>
+                <input type="checkbox" id="checkit" />
+                <span>Agree to Policies</span>
+              </label>
+            </div>
+            <!-- submit and alert -->
+            <div>
+              <input id="submitme" type="submit" value="Enroll" onclick="validateEnroll(event)" disabled />
+            </div>
+            <!-- spinner
+            <div id="spinner" class="preloader-wrapper big active" style="display: none;">
+              <div class="spinner-layer spinner-green-only">
+                <div class="circle-clipper left">
+                  <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                  <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                  <div class="circle"></div>
+                </div>
+              </div>
+            </div> -->
+
+            <div id="bigerror"></div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+
+    <!-- my class page-->
+    <div class="display" id="myclasspage">
+      <div class="row">
+        <div class="col s12 m6">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">My Class</span>
+              <p>Program: Baby and Parent</p>
+              <p>Class time: Monday 10am-10.30am</p>
+              <p>Trainer: Dow Snow</p>
+            </div>
+            <div class="card-action">
+              <a href="#">Student List</a>
+              <a href="#">Check Photos</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- contact page -->
+    <div class="display" id="contactpage">
+
+    </div>
+
+    <!-- my account setting page-->
+    <div class="display" id="settingpage">
+      <!-- Switch light-->
+      <div class="row">
+        <h6>Turn On/Off the Light:</h6>
+        <div class="switch">
+          <label>
+            On
+            <input type="checkbox" id="bkndcheck" onchange="switchbg(this)">
+            <span class="lever"></span>
+            Off
+          </label>
+        </div>
+      </div>
+      <!-- change password -->
+      <div class="row">
+        <h6>Change Your Password:</h6>
+        <div class="row">
+          <div class="col s12">
+            <!-- password1 -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key</i>
+                <input id="psw1" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  minlength="8" required>
+                <label for="password">New Password</label>
+                <div class="error" id="errorpsw1">
+                  <p>Password must contain the following:</p>
+                  <p>A <b>lowercase</b> letter</p>
+                  <p>A <b>capital (uppercase)</b> letter</p>
+                  <p>A <b>number</b></p>
+                  <p>Minimum <b>8 characters</b></p>
+                </div>
+              </div>
+            </div>
+            <!-- password2 -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key</i>
+                <input id="psw2" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  minlength="8" required>
+                <label for="password">New Password Again</label>
+                <div class="error" id="errorpsw2">
+                  <p>Password must contain the following:</p>
+                  <p class="invalid">A <b>lowercase</b> letter</p>
+                  <p class="invalid">A <b>capital (uppercase)</b> letter</p>
+                  <p class="invalid">A <b>number</b></p>
+                  <p class="invalid">Minimum <b>8 characters</b></p>
+                </div>
+                <div class="error" id="samepsw">
+                  <p>Two passwords are not same.</p>
+                </div>
+              </div>
+              <button class="btn light-blue" onclick="revealPasswords()" type="button" style="margin-left: 20px;"><i
+                  class="material-icons">remove_red_eye</i></button>
+            </div>
+            <button class="btn blue" type="submit" name="action" onclick="validateP(event)">save
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </section>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('.modal').modal();
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $('.collapsible').collapsible();
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $('.tooltipped').tooltip();
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $('.datepicker').datepicker();
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $('.sidenav').sidenav();
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $('select').formSelect();
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $('input#input_text, textarea#textarea2').characterCounter();
+  });
+</script>
+
+</html>
