@@ -1,3 +1,4 @@
+
 window.onload = function () {
   // pure js method
   // var show = document.getElementsByClassName("display");
@@ -351,3 +352,35 @@ function switchbg(checkIT) {
     localStorage.setItem('bg', 'bright');
   }
 }
+
+
+var api = "http://localhost:8888/swimschool/api/api.php"
+
+function getAllPrograms() {
+  var endPoint = api + "?action=allprograms";
+  fetch(endPoint, {
+    method: "GET",
+    mode: "cors",
+    credentials: "include",
+  })
+    .then(function (response) {
+      if (response.status !== 200) {
+        console.log("Looks like there was a problem. Status Code: " + response.status);
+      }
+      return response.json();
+    })
+    .then((programs) => {
+      console.log(programs);
+      const place_holder = document.getElementById("programs");
+      programs.map((program) => {
+        let row = document.createElement("div");
+        row.innerHTML = `<div class="row"><div class="title">Program: ${program.program_name}</div> <div class="price">Price: ${program.price}</div> <div class="duration">Duration: ${program.duration}</div></div>`;
+        place_holder.appendChild(row);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+getAllPrograms();

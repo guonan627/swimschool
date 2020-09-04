@@ -7,8 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registration Form</title>
   <link href="./manifest.json" />
-  <link rel="stylesheet" href="css/css.css" />
-  <script src="js/script.js" defer></script>
+  <link rel="stylesheet" href="./css/style.css" />
+  <script src="./app.js" defer></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" />
 
   <!--Import Google Icon Font-->
@@ -104,9 +104,9 @@
             <div class="row">
               <div class="input-field col s12">
                 <i class="material-icons prefix">vpn_key</i>
-                <input id="psw1" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                <input id="psw1a" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                   minlength="8" required>
-                <label for="psw1">Password</label>
+                <label for="psw1a">Password</label>
                 <div class="error" id="errorpsw1">
                   <p>Password must contain the following:</p>
                   <p>A <b>lowercase</b> letter</p>
@@ -120,9 +120,9 @@
             <div class="row">
               <div class="input-field col s12">
                 <i class="material-icons prefix">vpn_key</i>
-                <input id="psw2" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                <input id="psw2a" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                   minlength="8" required>
-                <label for="psw2">Password Again</label>
+                <label for="psw2a">Password Again</label>
                 <div class="error" id="errorpsw2">
                   <p>Password must contain the following:</p>
                   <p class="invalid">A <b>lowercase</b> letter</p>
@@ -250,6 +250,7 @@
     </div>
 
     <!-- program intro page-->
+    <div id="programs"></div>
     <div class="display" id="programpage">
       <div class="row">
         <div class="col s12">
