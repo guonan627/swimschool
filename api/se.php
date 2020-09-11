@@ -5,39 +5,12 @@
     }
 
     class sessionObject {
-        private $ip;
-        private $referrer;
         private $lastrequestArray = null;
         private $authCode = null;
-        private $uid = null;
-        private $icon;
-        private $tid;
-        private $ticon;
+        private $username = null;
+        private $userid = null;
+        private $role = null;
 
-        public function __construct() {
-            if(isset($_SERVER['REMOTE_ADDR'])) {
-                $this->ip = $_SERVER['REMOTE_ADDR'];
-            } else {
-                throw new APIException("No viable headers");
-            }
-            if(isset($_SERVER['HTTP_REFERER'])) {
-                $this->referrer = $_SERVER['HTTP_REFERER'];
-            } else {
-                throw new APIException("no referrer");
-            }
-        }
-        public function logEvent() {
-            global $databaseOBJECT;
-            return $databaseOBJECT->logEvent();
-        }
-        public function domainLock() {
-            if((strpos($this->referrer, 'localhost') !== false) ||
-                    (strpos($this->referrer, 'LANLadder') !== false)) {
-                return true;
-            } else {
-                throw new APIException("invalid referrer");
-            }
-        }
         public function rateLimit() {
             $temprequestArray = Array();
             if($this->lastrequestArray == null) {
@@ -67,42 +40,27 @@
             }
             return true;
         }
+
         function isAuth() {
             if($this->authCode !== null) {
-                return Array('auth'=>$this->authCode, 
-                             'authicon'=>$this->icon,
-                             'teamid'=>$this->tid, 
-                             'teamicon'=>$this->ticon);
+                return Array('auth'=>$this->authCode, 'username'=>$this->username, 'userid'=>$this->userid, 'role'=>$this->role);
             } else {
                 return Array('auth'=>-1);
             }
         }
+        // set session variables upon successful login
         function setAuth($incomingAuth) {
-            global $databaseOBJECT;
             $stringAuth = json_encode($incomingAuth);
             $this->authCode = hash('md2', $stringAuth);
-            $this->uid = $incomingAuth['id'];
-            $this->tid = $incomingAuth['team_id'];
-            $this->icon = $incomingAuth['image'];
-            $team = $databaseOBJECT->getTeam($incomingAuth['team_id']);
-            $this->ticon = $team['image'];
-            return Array('name'=>$this->authCode, 
-                        'authicon'=>$this->icon,
-                        'teamid'=>$this->tid,
-                        'teamicon'=>$this->ticon);
+            $this->userid = $incomingAuth['login_id'];
+            $this->username = $incomingAuth['username'];
+            $this->role = $incomingAuth['role'];
+            return Array('auth'=>$this->authCode, 'username'=>$this->username, 'userid'=>$this->userid, 'role'=>$this->role);
         }
         function unsetAuth() {
             $this->authCode = null;
             $this->uid = null;
-            $this->tid = null;
-            $this->icon = null;
-            return Array("name"=>"-1");
-        }
-        function uid() {
-            return $this->uid;
-        }
-        function tid() {
-            return $this->tid;
+            $this->role = null;
+            return Array("username"=>"-1");
         }
     }
-?>

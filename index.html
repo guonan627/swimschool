@@ -79,7 +79,7 @@
               <div class="input-field col s12">
                 <i class="material-icons prefix">people</i>
                 <input class="validate" id="un" type="text" title="user name" pattern="(?!.*fuck)[A-Za-z]{3,128}"
-                  name="user name" required />
+                  name="username" required />
                 <label for="un">User Name</label>
                 <div class="error" id="errorun">
                   Please enter a valid username
@@ -90,7 +90,7 @@
             <div class="row">
               <div class="input-field col s12">
                 <i class="material-icons prefix">email</i>
-                <input class="em validate" id="em" type="email" pattern="a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                <input class="em validate" id="em" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   title="email" name="email" required />
                 <label for="em">Email</label>
                 <!-- <span class="helper-text" data-error="wrong" data-success="right">Helper text</span> -->
@@ -139,7 +139,7 @@
             </div>
 
             <button class="btn-floating btn-large pulse light-blue" type="submit" name="action"
-              onclick="validateReg(event)">Go
+              onclick="handleReg(event)">Go
             </button>
       </fieldset>
     </div>
@@ -155,7 +155,7 @@
               <div class="input-field col s12">
                 <i class="material-icons prefix">people</i>
                 <input class="validate" id="unb" type="text" title="user name" pattern="(?!.*fuck)[A-Za-z]{3,128}"
-                  name="user name" required />
+                  name="username" required />
                 <label for="unb">User Name</label>
               </div>
             </div>
@@ -419,7 +419,7 @@
               </div>
             </div>
             <!-- address -->
-            <div class="row">
+            <!-- <div class="row">
               <div class="input-field col s12">
                 <i class="material-icons prefix">account_balance</i>
                 <input class="validate" id="ad" type="text" pattern="[0-9{6}" minlength="6" maxlength="20"
@@ -427,9 +427,25 @@
                 <label for="ad">Address</label>
                 <div class="error" id="errorad">Please enter a valid address</div>
               </div>
+            </div> -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">account_balance</i>
+                <input type="search" class="form-input validate" id="addrs_1" placeholder="Address"
+                  autocomplete="off_1" required></input>
+                <input type="search" class="form-input validate" id="suburb" placeholder="Suburb" autocomplete="off_1"
+                  required></input>
+                <input type="search" class="form-input validate" id="state" placeholder="State" autocomplete="off_1"
+                  required></input>
+                <input type="search" class="form-input validate" id="postcode" placeholder="Postcode"
+                  autocomplete="off_1" required></input>
+                <div class="error" id="errorad">Please enter a valid address</div>
+              </div>
             </div>
+
             <!-- program  -->
             <div class="input-field col s12">
+              <i class="material-icons prefix">event</i>
               <select id="pro" required>
                 <option value="" disabled selected>Choose Program</option>
                 <option value="1">Option 1</option>
@@ -443,6 +459,7 @@
             </div>
             <!-- class -->
             <div class="input-field col s12">
+              <i class="material-icons prefix">access_alarms</i>
               <select id="cla" required>
                 <option value="" disabled selected>Choose Class Time</option>
                 <option value="1">Option 1</option>
@@ -507,20 +524,6 @@
             <div>
               <input id="submitme" type="submit" value="Enroll" onclick="validateEnroll(event)" disabled />
             </div>
-            <!-- spinner
-            <div id="spinner" class="preloader-wrapper big active" style="display: none;">
-              <div class="spinner-layer spinner-green-only">
-                <div class="circle-clipper left">
-                  <div class="circle"></div>
-                </div>
-                <div class="gap-patch">
-                  <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                  <div class="circle"></div>
-                </div>
-              </div>
-            </div> -->
 
             <div id="bigerror"></div>
           </div>

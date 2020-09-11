@@ -1,5 +1,5 @@
 <?php
-class databaseObject
+class DB
 {
     private $host = 'localhost:8889';
     private $db_name = 'school';
@@ -16,6 +16,53 @@ class databaseObject
             die();
         }
     }
+
+    public function login($username, $password)
+    {
+        try {
+            $auth = "SELECT * FROM login WHERE username = :username";
+            $stmt = $this->conn->prepare($auth);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result == false) {
+                return array("username" => -1);
+            } else {
+                if (password_verify($password, $result['password'])) {
+                // if ($password == $result['password']) {
+                    return $result;
+                } else {
+                    return array("username" => -1);
+                }
+            }
+        } catch (PDOException $e) {
+            echo "Login error";
+            die();
+        }
+    }
+
+    public function signUp($username, $email, $password) {
+        try {
+            $HashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $query = 'INSERT INTO login (username, email, password)
+                VALUES (:username, :email, :password)';
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $HashedPassword);
+            $result = $stmt->execute();
+            if($result == false) {
+                return false;
+            } else {
+                return Array("request"=>"Registered a user");
+                //$conn->lastInsertId();
+            }
+        } catch (PDOException $e) {
+            echo $e;
+            echo "Register user error"; die();
+        }
+    }
+
 
     public function addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration)
     {
@@ -137,6 +184,4 @@ class databaseObject
             die();
         }
     }
-
-    // Add Class
 }
