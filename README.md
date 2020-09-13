@@ -1,8 +1,10 @@
+## Introduction
 This web App is an online class enrolment system supporting the Bright Star Swim School’s offline swim classes provided in the local swimming pool.
 
 ENTITIES: admin, unenrolled_student, enrolled_student, class, program, photo
 USERS: anonymous, admin,student
 
+## Business Rules
 Business Rules:
 * Any anonymous can browse the teaching programs introduction and find all classes filtered by program and class time.
 * Anonymous users can register to be a student role. 
@@ -17,7 +19,7 @@ the same class as it is fully booked.
 * An Admin role has full permissions to CRUD any user account, the information of any program, class and enrolled student of particular class.
 * An Admin can upload and delete class photos to any particular class folder. Once a file is uploaded, a record will be inserted into the database.
 
-
+## Technologies
 Technologies:
 * The website will decouple the front end (web app and admin panel) and the back end (web services). Web app is for public use. All anonymous users and registered students will use the web app to browse, enrol classes and download photos from the app. Admin panel is for admin staff to mange the programs, classes and enrolled students. 
 * Web services will provide APIs for web app and admin panel to perform CRUD operations on the database. Web Service will support the activities of a user, but users must authenticate to use all web functions.
@@ -75,16 +77,18 @@ __DELETE__ *http://localhost:8888/swimschool/api/api.php?action=removeprogram&pr
 Required fields:
 * program_id (in URL)
 
-
+## Current Status
 Current Status
  Frontend - Test html/css/js created to interact with web service
  Backend - Web Service in Test phase
  Admin panel - Not Started
 
+## Major Priorities
 Major Priorities:
  1 Write a panel for players and teams to allow player to join & kick
  3 Implement 3rd party element that implements a date format compatible with mysql.
 
+## Long-term Priorities
 Long-term Priorities:
  Make auth work with Google API
  get a JS photo editor to square uploaded image
