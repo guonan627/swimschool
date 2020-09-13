@@ -12,7 +12,7 @@ $db = new DB();
 $session = new sessionObject();
 
 try {
-    // json data from request body (from javascript fetch())
+    // parse json data in request body (from javascript fetch())
     $data = json_decode(file_get_contents("php://input"));
 
     // set session object
@@ -22,13 +22,13 @@ try {
 
     // rate limit
     if ($_SESSION['sessionObj']->rateLimit() == false) {
-        throw new Exception("Rate limit exceeded");
+        throw new APIException("Rate limit exceeded");
     }
 
     if (isset($_GET['action'])) {
         $validated_action = validate($_GET['action'], 'alpha');
         if ($validated_action == false) {
-            throw new Exception("Action code is not valid");
+            throw new APIException("Action code is not valid");
         }
 
         // VALIDATORS
@@ -36,70 +36,70 @@ try {
         if (isset($data->email)) {
             $email = filter_var($data->email, FILTER_VALIDATE_EMAIL);
             if ($email == false) {
-                throw new Exception("Email not valid");
+                throw new APIException("Email not valid");
             }
         }
 
         if (isset($data->username)) {
             $username = validate($data->username, 'alphanumeric');
             if ($username == false) {
-                throw new Exception("Username not valid");
+                throw new APIException("Username not valid");
             }
         }
 
         if (isset($data->password)) {
             $password = validate($data->password, 'alphanumeric');
             if ($password == false) {
-                throw new Exception("Password not valid");
+                throw new APIException("Password not valid");
             }
         }
 
-        if (isset($data->program_id)) {
-            $program_id = validate($data->program_id, 'integer');
+        if (isset($_GET['program_id'])) {
+            $program_id = validate($_GET['program_id'], 'integer');
             if ($program_id == false) {
-                throw new Exception("Program ID not valid");
+                throw new APIException("Program ID not valid");
             }
         }
 
         if (isset($data->program_name)) {
             $program_name = validate($data->program_name, 'alphanumeric_space');
             if ($program_name == false) {
-                throw new Exception("Program Name not valid");
+                throw new APIException("Program Name not valid");
             }
         }
 
         if (isset($data->description)) {
             $description = validate($data->description, 'alphanumeric_space');
             if ($description == false) {
-                throw new Exception("Description not valid");
+                throw new APIException("Description not valid");
             }
         }
 
         if (isset($data->program_level)) {
             $program_level = validate($data->program_level, 'alphanumeric_space');
             if ($program_level == false) {
-                throw new Exception("Program level value not valid");
+                throw new APIException("Program level value not valid");
             }
         }
 
         if (isset($data->price)) {
             $price = validate($data->price, 'integer');
             if ($price == false) {
-                throw new Exception("Price value not valid");
+                throw new APIException("Price value not valid");
             }
         }
 
         if (isset($data->prerequisites)) {
             $prerequisites = validate($data->prerequisites, 'alphanumeric_space');
             if ($prerequisites == false) {
-                throw new Exception("Prerequisites value not valid");
+                throw new APIException("Prerequisites value not valid");
             }
         }
 
         if (isset($data->duration)) {
             $duration = validate($data->duration, 'alphanumeric_space');
             if ($duration == false) {
-                throw new Exception("Duration value not valid");
+                throw new APIException("Duration value not valid");
             }
         }
 
@@ -114,7 +114,6 @@ try {
                         $result = $_SESSION['sessionObj']->setAuth($result); // set session variables
                         $response->setHttpStatusCode(200);
                         $response->setSuccess(true);
-                        $response->addMessage("Login successful");
                         $response->setData($result);
                     } else {
                         $response->setHttpStatusCode(401);
@@ -129,57 +128,132 @@ try {
                 $response->send();
                 exit;
                 break;
+
             case "signup":
+                $response = new Response();
                 if (isset($username) && isset($email) && isset($password)) {
-                    $result = $db->signUp($username, $email, $password);
+                    $emailList = $db->findAllEmails();
+                    if (in_array(array("email" => $email), $emailList)) {
+                        $response->setHttpStatusCode(400);
+                        $response->setSuccess(false);
+                        $response->addMessage("Email already exists, please try another one");
+                    } else {
+                        $result = $db->signUp($username, $email, $password);
+                        $response->setHttpStatusCode(201);
+                        $response->setSuccess(true);
+                        $response->addMessage("You registered successfully");
+                    }
                 } else {
-                    throw new Exception("Register user error");
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please provide username, email and password");
                 }
+                $response->send();
+                exit;
                 break;
+
             case "allprograms":
+                $response = new Response();
                 $result = $db->getAllPrograms();
+                $response->setHttpStatusCode(200);
+                $response->setSuccess(true);
+                $response->setData($result);
+                $response->send();
+                exit;
                 break;
+
             case "findprogram":
+                $response = new Response();
                 if (isset($program_id)) {
                     $result = $db->getProgram($program_id);
+                    if ($result == false) {
+                        $response->setHttpStatusCode(404);
+                        $response->setSuccess(false);
+                        $response->addMessage("Can't find the program with that ID");
+                    } else {
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($result);
+                    }
                 } else {
-                    throw new Exception("find program error");
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please specify program ID");
                 }
+                $response->send();
+                exit;
                 break;
+
             case "addprogram":
+                $response = new Response();
                 if (isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration)) {
                     $result = $db->addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration);
+                    $response->setHttpStatusCode(200);
+                    $response->setSuccess(true);
+                    $response->setData($result);
                 } else {
-                    throw new Exception("create program error");
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please provide program name, description, program level, price, prerequisites and duration.");
                 }
+                $response->send();
+                exit;
                 break;
+
             case "editprogram":
+                $response = new Response();
                 if (isset($program_id) && isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration)) {
                     $result = $db->updateProgram($program_name, $description, $program_level, $price, $prerequisites, $duration, $program_id);
+                    if ($result == false) {
+                        $response->setHttpStatusCode(404);
+                        $response->setSuccess(false);
+                        $response->addMessage("Can't find the program with that ID");
+                    } else {
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($result);
+                    }
                 } else {
-                    throw new Exception("update program error");
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please provide program name, description, program level, price, prerequisites and duration.");
                 }
+                $response->send();
+                exit;
                 break;
+
             case "removeprogram":
-                if (isset($program_id)) {
-                    $result = $db->deleteProgram($program_id);
+                $response = new Response();
+                if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
+                    if (isset($program_id)) {
+                        $result = $db->deleteProgram($program_id);
+                        $response->setHttpStatusCode(204);
+                        $response->setSuccess(true);
+                        $response->addMessage("Program deleted");
+                    } else {
+                        $response->setHttpStatusCode(400);
+                        $response->setSuccess(false);
+                        $response->addMessage("Please provide program ID.");
+                    }
                 } else {
-                    throw new Exception("delete program error");
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Incorrect request method");
                 }
+                $response->send();
+                exit;
                 break;
+
             default:
-                throw new Exception("incorrect action code");
+                throw new APIException("incorrect action code");
                 break;
         }
     } else {
-        throw new Exception("Action code does not exist");
+        throw new APIException("Action code does not exist");
     }
     if ($result == false) {
         echo json_encode(array('result' => 'false'));
-    } else {
-        echo json_encode($result);
     }
-} catch (Exception $ae) {
-    // echo $ae; // This is debug. INSTEAD: echo json_encode(Array('error'=>'true'));
-    echo json_encode(array('error' => 'true'));
+} catch (APIException $ex) {
+    echo json_encode(array('Error' => $ex->getMessage()));
 }

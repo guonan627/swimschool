@@ -1,4 +1,6 @@
 <?php
+class APIException extends Exception {}
+
 // Response Object
 class Response
 {

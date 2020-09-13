@@ -6,6 +6,8 @@ $("html,body").animate(
   400
 );
 
+var api = "http://localhost:8888/swimschool/api/api.php";
+
 // address finder api start
 (function () {
   var widget,
@@ -206,8 +208,7 @@ function submitLogin(event) {
       username: username.value,
       password: password.value,
     };
-    console.log(data);
-    fetch("http://localhost:8888/swimschool/api/api.php?action=login", {
+    fetch(api + "?action=login", {
       method: "post",
       headers: {
         Accept: "application/json",
@@ -216,7 +217,19 @@ function submitLogin(event) {
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
-      .then((res) => console.log(res));
+      .then((res) => {
+        if (res.statusCode === 401) {
+          alert("Incorrect username or password.");
+          localStorage.removeItem("token");
+          return;
+        }
+        if (res.statusCode === 200) {
+          alert(`Welcome ${res.data.username}, you have successfully logged in.`);
+          localStorage.setItem("token", res.data.auth);
+          fho();
+        }
+      })
+      .catch((err) => console.log(err));
   }
 }
 
@@ -276,8 +289,7 @@ function handleReg(event) {
       email: email.value,
       password: psw1.value,
     };
-    console.log(data);
-    fetch("http://localhost:8888/swimschool/api/api.php?action=signup", {
+    fetch(api + "?action=signup", {
       method: "post",
       headers: {
         Accept: "application/json",
@@ -286,7 +298,10 @@ function handleReg(event) {
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
-      .then((res) => console.log(res));
+      .then((res) => {
+        alert(`Welcome, you have successfully registered.`);
+        fho();
+      });
   }
 
   function validateGender() {
@@ -414,64 +429,33 @@ function handleReg(event) {
       localStorage.setItem("bg", "bright");
     }
   }
-
-  var api = "http://localhost:8888/swimschool/api/api.php";
-
-  function getAllPrograms() {
-    var endPoint = api + "?action=allprograms";
-    fetch(endPoint, {
-      method: "GET",
-      mode: "cors",
-      credentials: "include",
-    })
-      .then(function (response) {
-        if (response.status !== 200) {
-          console.log("Looks like there was a problem. Status Code: " + response.status);
-        }
-        return response.json();
-      })
-      .then((programs) => {
-        console.log(programs);
-        const place_holder = document.getElementById("programs");
-        programs.map((program) => {
-          let row = document.createElement("div");
-          row.innerHTML = `<div class="row"><div class="title">Program: ${program.program_name}</div> <div class="price">Price: ${program.price}</div> <div class="duration">Duration: ${program.duration}</div></div>`;
-          place_holder.appendChild(row);
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  getAllPrograms();
-
-  // function login() {
-  //   closeAllModals();
-  //   populateAlert('Loading...', 'notice');
-  //   var fd = new FormData();
-  //   fd.append('username', loginusername.value);
-  //   fd.append('password', loginpassword.value);
-  //   fetch('http://localhost/swimschool/api/api.php?action=login',
-  //     {
-  //       method: 'POST',
-  //       body: fd,
-  //       crendentials: 'include'
-  //     }
-  //   )
-  //     .then(function (response) {
-  //       if (response.status === 401) {
-  //         populateAlert('Authentication failed, set password', 'warning');
-  //         localStorage.removeItem('credentials');
-  //         paintLoginStatus('anon', 'FFFFFF')
-  //         registrationusername.value = loginusername.value
-  //         openModal('modal_register');
-  //         return;
-  //       }
-
-  //       response.json().then(function (data) {
-  //         populateAlert('Authentication success', 'warning');
-
-  //       })
-  //     })
 }
+
+function getAllPrograms() {
+  var endPoint = api + "?action=allprograms";
+  fetch(endPoint, {
+    method: "GET",
+    mode: "cors",
+    credentials: "include",
+  })
+    .then(function (response) {
+      if (response.status !== 200) {
+        console.log("Looks like there was a problem. Status Code: " + response.status);
+      }
+      return response.json();
+    })
+    .then((jsonResponse) => {
+      const place_holder = document.getElementById("programs");
+      place_holder.innerHTML = null;
+      jsonResponse.data.map((program) => {
+        let row = document.createElement("div");
+        row.innerHTML = `<div class="row"><div class="title">Program: ${program.program_name}</div> <div class="price">Price: ${program.price}</div> <div class="duration">Duration: ${program.duration}</div></div>`;
+        place_holder.appendChild(row);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+getAllPrograms();

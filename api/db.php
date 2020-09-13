@@ -54,12 +54,29 @@ class DB
             if($result == false) {
                 return false;
             } else {
-                return Array("request"=>"Registered a user");
+                return $result;
                 //$conn->lastInsertId();
             }
         } catch (PDOException $e) {
             echo $e;
             echo "Register user error"; die();
+        }
+    }
+
+    public function findAllEmails() {
+        try {
+            $query = 'SELECT email FROM login';
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($result == false) {
+                return false;
+            } else {
+                return $result;
+            }
+        } catch (PDOException $e) {
+            echo "get accounts error";
+            die();
         }
     }
 
@@ -96,7 +113,7 @@ class DB
     }
 
 
-    // Get Programs
+    // Get All Programs
     public function getAllPrograms()
     {
         try {
@@ -155,7 +172,7 @@ class DB
             if ($result == false) {
                 return false;
             } else {
-                return array("request" => "updated a program");
+                return $this->getProgram($program_id);
             }
         } catch (PDOException $e) {
             echo "update program error";
@@ -177,7 +194,7 @@ class DB
             if ($result == false) {
                 return false;
             } else {
-                return array("request" => "removed a program");
+                return array("request" => "removed program");
             }
         } catch (PDOException $e) {
             echo "get programs error";
