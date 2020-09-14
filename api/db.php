@@ -80,7 +80,7 @@ class DB
         }
     }
 
-
+    // Add Program
     public function addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration)
     {
         try {
@@ -201,4 +201,26 @@ class DB
             die();
         }
     }
+
+     // View Own Class
+     public function viewOwnClass($class_id)
+     {
+         try {
+             $query = 'SELECT * FROM program WHERE program_id = ' . $program_id;
+             $stmt = $this->conn->prepare($query);
+             $stmt->execute();
+             $row = $stmt->fetch(PDO::FETCH_ASSOC);
+             if ($row == false) {
+                 return false;
+             } else {
+                 return $row;
+             }
+         } catch (PDOException $e) {
+             echo "get program error";
+             die();
+         }
+     }    
+
+
+    
 }

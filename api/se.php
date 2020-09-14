@@ -11,6 +11,33 @@
         private $userid = null;
         private $role = null;
 
+        // public function domainLock() {
+        //     if((strpos($this->referrer, 'localhost') !== false) ||
+        //             (strpos($this->referrer, 'LANLadder') !== false)) {
+        //         return true;
+        //     } else {
+        //         throw new APIException("invalid referrer");
+        //     }
+        // }
+
+        // public function rateLimit1(){
+        //     if (isset($_SESSION['LAST_CALL'])) {
+        //         $last = strtotime($_SESSION['LAST_CALL']);
+        //         $curr = strtotime(date("Y-m-d h:i:s"));
+        //         $sec =  abs($last - $curr);
+
+        //         if ($sec <= 1) {
+        //           $data = 'Rate Limit Exceeded'; // too frequent
+        //           die (json_encode($data));
+        //         }
+        //       }
+        //       $_SESSION['LAST_CALL'] = date("Y-m-d h:i:s");
+             
+        //       // normal use
+        //       $data = "Data Returned from API";
+        //       die(json_encode($data)); 
+        // }
+
         public function rateLimit() {
             $temprequestArray = Array();
             if($this->lastrequestArray == null) {
@@ -41,6 +68,8 @@
             return true;
         }
 
+
+
         function isAuth() {
             if($this->authCode !== null) {
                 return Array('auth'=>$this->authCode, 'username'=>$this->username, 'userid'=>$this->userid, 'role'=>$this->role);
@@ -48,6 +77,7 @@
                 return Array('auth'=>-1);
             }
         }
+
         // set session variables upon successful login
         function setAuth($incomingAuth) {
             $stringAuth = json_encode($incomingAuth);
@@ -63,4 +93,5 @@
             $this->role = null;
             return Array("username"=>"-1");
         }
+        
     }
