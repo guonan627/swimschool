@@ -28,30 +28,30 @@ the same class as it is fully booked.
 
 #### Sign Up:
 __POST__ *http://localhost:8888/swimschool/api/api.php?action=signup*  
-* Required fields:
+__Required fields:__
 * username
 * email
 * password
 
 #### Login:
 __POST__ *http://localhost:8888/swimschool/api/api.php?action=login*  
-* Required fields:
+__Required fields:__
 * username
 * password
 
 #### Get all programs:
 __GET__ *http://localhost:8888/swimschool/api/api.php?action=allprograms*  
-* Required fields:
+__Required fields:__
 none
 
 #### Get single program by ID:
 __GET__ *http://localhost:8888/swimschool/api/api.php?action=findprogram&program_id=1*  
-* Required fields:
+__Required fields:__
 * program_id (in URL)
 
 #### Create prorgram:
 __POST__ *http://localhost:8888/swimschool/api/api.php?action=addprogram*  
-* Required fields:
+__Required fields:__
 * program_name
 * description
 * program_level
@@ -61,7 +61,7 @@ __POST__ *http://localhost:8888/swimschool/api/api.php?action=addprogram*
 
 #### Update program:
 __PATCH__ *http://localhost:8888/swimschool/api/api.php?action=editprogram&program_id=1*  
-* Required fields:
+__Required fields:__
 * program_id (in URL)
 * program_name
 * description
@@ -72,13 +72,19 @@ __PATCH__ *http://localhost:8888/swimschool/api/api.php?action=editprogram&progr
 
 #### Delete program:
 __DELETE__ *http://localhost:8888/swimschool/api/api.php?action=removeprogram&program_id=11*  
-* Required fields:
+__Required fields:__
 * program_id (in URL)
 
 #### Search Classes by Day:
 __GET__ *http://localhost:8888/swimschool/api/api.php?action=classesbyday*  
-* Required fields:
+__Required fields:__
 * program_id (in URL)
+
+## Security
+* Logging feature that accounts for every request with IP, browser, timestamp and action
+* Rate limit Web Service to one request per second per user session 
+* Limit per session request to 1,000 in a 24hour period
+
 
 ## Current Status
 * Frontend -  complete the prototype and fetched some information from database
