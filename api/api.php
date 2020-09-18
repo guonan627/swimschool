@@ -3,27 +3,54 @@ include("db.php"); // ALL SQL Actions go here
 include("se.php"); // ALL Session Management goes here
 include("util.php"); // ALL generic utilities
 
+date_default_timezone_set('Australia/Brisbane');
+
 session_start();
 
-// database object
-$db = new DB();
-
-// session object
-$session = new sessionObject();
-
 try {
+    // database object
+    $db = new DB();
+
     // parse json data in request body (from javascript fetch())
     $data = json_decode(file_get_contents("php://input"));
 
-    // set session object
+    // assign session object
     if (!isset($_SESSION['sessionObj'])) {
-        $_SESSION['sessionObj'] = $session;
+        $_SESSION['sessionObj'] = new sessionObject();
     }
 
-    // rate limit
-    if ($_SESSION['sessionObj']->rateLimit() == false) {
-        throw new APIException("Rate limit exceeded");
+    // set session variables
+    $_SESSION['sessionObj']->setIp($_SERVER['REMOTE_ADDR']);
+    
+    if ($_SESSION['sessionObj']->getStartTime() == null) {
+        $_SESSION['sessionObj']->setStartTime(time());
     }
+
+    $counter = $_SESSION['sessionObj']->getRequestCounter();
+    if ($counter == null) {
+        $_SESSION['sessionObj']->setRequestCounter(1);
+    } else {
+        $_SESSION['sessionObj']->setRequestCounter($counter + 1);
+    }
+
+    // general rate limiter: 1 request/sec
+    if (isset($_SESSION['LAST_CALL'])) {
+        $last = strtotime($_SESSION['LAST_CALL']);
+        $curr = strtotime(date("Y-m-d h:i:s"));
+        $sec = abs($curr - $last);
+        if ($sec <= 1) {
+            throw new APIException("Rate limit exceeded");
+        }
+    }
+    $_SESSION['LAST_CALL'] = date("Y-m-d h:i:s");
+
+    // session rate limiter: 1000 requests/day
+    if ($_SESSION['sessionObj']->oneDayRateLimit() == false) {
+        throw new APIException("Daily rate limit exceeded");
+    }
+
+    // debug
+    // die(json_encode($_SESSION['sessionObj']->oneDayRateLimit()));
 
     if (isset($_GET['action'])) {
         $validated_action = validate($_GET['action'], 'alpha');
@@ -107,6 +134,7 @@ try {
 
         switch ($validated_action) {
             case "login":
+                // $_SESSION['sessionObj']->setRequestCounter($counter + 1);
                 $response = new Response();
                 if (isset($username) && isset($password)) {
                     $result = $db->login($username, $password); // verify password
@@ -115,6 +143,8 @@ try {
                         $response->setHttpStatusCode(200);
                         $response->setSuccess(true);
                         $response->setData($result);
+                        $db->logging($username . ' logged in');
+                        logFile($username . ' logged in');
                     } else {
                         $response->setHttpStatusCode(401);
                         $response->setSuccess(false);
@@ -142,6 +172,8 @@ try {
                         $response->setHttpStatusCode(201);
                         $response->setSuccess(true);
                         $response->addMessage("You registered successfully");
+                        $db->logging($email . ' signed up');
+                        logFile($email . ' signed up');
                     }
                 } else {
                     $response->setHttpStatusCode(400);
@@ -159,6 +191,8 @@ try {
                 $response->setSuccess(true);
                 $response->setData($result);
                 $response->send();
+                $db->logging('Fetched all programs');
+                logFile('Fetched all programs');
                 exit;
                 break;
 
@@ -166,6 +200,7 @@ try {
                 $response = new Response();
                 if (isset($program_id)) {
                     $result = $db->getProgram($program_id);
+                    // die(json_encode($result));
                     if ($result == false) {
                         $response->setHttpStatusCode(404);
                         $response->setSuccess(false);
@@ -174,6 +209,8 @@ try {
                         $response->setHttpStatusCode(200);
                         $response->setSuccess(true);
                         $response->setData($result);
+                        $db->logging('Fetched program ID: ' . $program_id);
+                        logFile('Fetched program ID: ' . $program_id);
                     }
                 } else {
                     $response->setHttpStatusCode(400);
@@ -191,6 +228,8 @@ try {
                     $response->setHttpStatusCode(200);
                     $response->setSuccess(true);
                     $response->setData($result);
+                    $db->logging('Added new program: ' . $program_name);
+                    logFile('Added new program: ' . $program_name);
                 } else {
                     $response->setHttpStatusCode(400);
                     $response->setSuccess(false);
@@ -212,6 +251,8 @@ try {
                         $response->setHttpStatusCode(200);
                         $response->setSuccess(true);
                         $response->setData($result);
+                        $db->logging('Updated program: ' . $program_name);
+                        logFile('Updated program: ' . $program_name);
                     }
                 } else {
                     $response->setHttpStatusCode(400);
@@ -230,6 +271,8 @@ try {
                         $response->setHttpStatusCode(204);
                         $response->setSuccess(true);
                         $response->addMessage("Program deleted");
+                        $db->logging('Removed program: ' . $program_name);
+                        logFile('Removed program: ' . $program_name);
                     } else {
                         $response->setHttpStatusCode(400);
                         $response->setSuccess(false);

@@ -5,7 +5,7 @@
   <!--Let browser know website is optimized for mobile-->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registration Form</title>
+  <title>Bright Star Swim School</title>
   <link href="./manifest.json" />
   <link rel="stylesheet" href="./css/style.css" />
   <script src="./app.js" defer></script>
@@ -251,7 +251,6 @@
 
     <!-- program intro page-->
     <div class="display" id="programpage">
-      <button class="btn" onclick="getAllPrograms()">Show Programs</button>
       <div id="programs"></div>
       <div class="row">
         <div class="col s12">
@@ -316,32 +315,38 @@
       <h5>Search Classes</h5>
       <!-- program filter -->
       <div class="row">
-        <div class="input-field col s6">
+        <div class="input-field col s8">
           <select>
             <option value="" disabled selected>by program</option>
-            <option value="1">All</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
+            <option value="1">parent and baby</option>
+            <option value="2">leap frog</option>
+            <option value="3">safe swimming</option>
+            <option value="4">swim perfect</option>
+            <option value="5">pre-team</option>
           </select>
         </div>
-        <!-- class-time filter -->
-        <div class="input-field col s6">
+        <div class="input-field col s4">
+          <a class="waves-effect waves-light btn light-blue" onclick="getClassesByProgram()">search</a>
+        </div>
+      </div>
+      <!-- class-time filter -->
+      <div class="row">
+        <div class="input-field col s8">
           <select>
             <option value="" disabled selected>by time</option>
-            <option value="1">All</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
+            <option value="1">Mon</option>
+            <option value="2">Tue</option>
+            <option value="3">wed</option>
+            <option value="4">Thu</option>
+            <option value="5">Fri</option>
+            <option value="6">Sat</option>
           </select>
         </div>
-      </div>
-      <div class="row" id="classbtn">
-        <div class="input-field col s4 offset-s8">
-          <a class="waves-effect waves-light btn light-blue">search</a>
+        <div class="input-field col s4">
+          <a class="waves-effect waves-light btn light-blue" onclick="getClassesByTime()">search</a>
         </div>
-        <!-- <div class="input-field col s6">
-          <a class="waves-effect waves-light btn light-blue">show all</a>
-        </div> -->
       </div>
+      <div id="showclasses"></div>
     </div>
 
     <!-- enroll page -->
@@ -432,8 +437,8 @@
             <div class="row">
               <div class="input-field col s12">
                 <i class="material-icons prefix">account_balance</i>
-                <input type="search" class="form-input validate" id="addrs_1" placeholder="Address"
-                  autocomplete="off_1" required></input>
+                <input type="search" class="form-input validate" id="addrs_1" placeholder="Address" autocomplete="off_1"
+                  required></input>
                 <input type="search" class="form-input validate" id="suburb" placeholder="Suburb" autocomplete="off_1"
                   required></input>
                 <input type="search" class="form-input validate" id="state" placeholder="State" autocomplete="off_1"

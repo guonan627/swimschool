@@ -26,32 +26,32 @@ the same class as it is fully booked.
 
 ## API
 
-### Sign Up:
-__POST__ *http://localhost:8888/swimschool/api/api.php?action=signup*
-Required fields:
+#### Sign Up:
+__POST__ *http://localhost:8888/swimschool/api/api.php?action=signup*  
+* Required fields:
 * username
 * email
 * password
 
-### Login:
-__POST__ *http://localhost:8888/swimschool/api/api.php?action=login*
-Required fields:
+#### Login:
+__POST__ *http://localhost:8888/swimschool/api/api.php?action=login*  
+* Required fields:
 * username
 * password
 
-### Get all programs:
-__GET__ *http://localhost:8888/swimschool/api/api.php?action=allprograms*
-Required fields:
+#### Get all programs:
+__GET__ *http://localhost:8888/swimschool/api/api.php?action=allprograms*  
+* Required fields:
 none
 
-### Get single program by ID:
-__GET__ *http://localhost:8888/swimschool/api/api.php?action=findprogram&program_id=1*
-Required fields:
+#### Get single program by ID:
+__GET__ *http://localhost:8888/swimschool/api/api.php?action=findprogram&program_id=1*  
+* Required fields:
 * program_id (in URL)
 
-### Create prorgram:
-__POST__ *http://localhost:8888/swimschool/api/api.php?action=addprogram*
-Required fields:
+#### Create prorgram:
+__POST__ *http://localhost:8888/swimschool/api/api.php?action=addprogram*  
+* Required fields:
 * program_name
 * description
 * program_level
@@ -59,9 +59,9 @@ Required fields:
 * prerequisites
 * duration
 
-### Update program:
-__PATCH__ *http://localhost:8888/swimschool/api/api.php?action=editprogram&program_id=1*
-Required fields:
+#### Update program:
+__PATCH__ *http://localhost:8888/swimschool/api/api.php?action=editprogram&program_id=1*  
+* Required fields:
 * program_id (in URL)
 * program_name
 * description
@@ -70,22 +70,22 @@ Required fields:
 * prerequisites
 * duration
 
-### Delete program:
-__DELETE__ *http://localhost:8888/swimschool/api/api.php?action=removeprogram&program_id=11*
-Required fields:
+#### Delete program:
+__DELETE__ *http://localhost:8888/swimschool/api/api.php?action=removeprogram&program_id=11*  
+* Required fields:
+* program_id (in URL)
+
+#### Search Classes by Day:
+__GET__ *http://localhost:8888/swimschool/api/api.php?action=classesbyday*  
+* Required fields:
 * program_id (in URL)
 
 ## Current Status
-* Frontend - Test html/css/js created to interact with web service
-* Backend - Web Service in Test phase
+* Frontend -  complete the prototype and fetched some information from database
+* Backend - complete some of Web Services
 * Admin panel - Not Started
 
 ## Major Priorities
- * Write a panel for players and teams to allow player to join & kick
- * Implement 3rd party element that implements a date format compatible with mysql.
+
 
 ## Long-term Priorities
- Make auth work with Google API
- get a JS photo editor to square uploaded image
- Password Reset via email post deployment online (AWS cognito?)
- Steam ID gets API substitution of both player name & palyer icon 

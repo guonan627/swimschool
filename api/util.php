@@ -1,5 +1,7 @@
 <?php
-class APIException extends Exception {}
+class APIException extends Exception
+{
+}
 
 // Response Object
 class Response
@@ -77,8 +79,34 @@ class Response
     }
 }
 
-
 // Helper functions
+
+function logFile($action)
+{
+    try {
+        $ip = $_SERVER['REMOTE_ADDR']; // IP address
+        $time = date('d/m/y h:i:sa', time()); // current date and time
+        // $browser = $_SERVER['HTTP_USER_AGENT'];
+        $ua = explode(" ", $_SERVER['HTTP_USER_AGENT']);
+        $browser = $ua[count($ua) - 1]; // find the last element in User Agent string
+
+        // read existing logs
+        $myfile = fopen("log.txt", "r") or die("Unable to open file!");
+        $contents = '';
+        while (!feof($myfile)) {
+            $contents .= fgets($myfile);
+        }
+        fclose($myfile);
+
+        // append new log
+        $contents .= "$time\t$ip\t$browser\t$action\r";
+        $myfile = fopen("log.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $contents);
+        fclose($myfile);
+    } catch (Exception $ex) {
+        echo json_encode(array('Error' => $ex->getMessage()));
+    }
+}
 
 function sanatise($dirty_string)
 {

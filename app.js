@@ -459,3 +459,59 @@ function getAllPrograms() {
 }
 
 getAllPrograms();
+
+
+// function getClassesByProgram() {
+//   var endPoint = api + "?action=classesbyprogram";
+//   fetch(endPoint, {
+//     method: "GET",
+//     mode: "cors",
+//     credentials: "include",
+//   })
+//     .then(function (response) {
+//       if (response.status !== 200) {
+//         console.log("Looks like there was a problem. Status Code: " + response.status);
+//       }
+//       return response.json();
+//     })
+//     .then((jsonResponse) => {
+//       const place_holder = document.getElementById("showclasses");
+//       place_holder.innerHTML = null;
+//       jsonResponse.data.map((program) => {
+//         let row = document.createElement("div");
+//         row.innerHTML = `<div class="row"><div class="title">Program: ${program.program_name}</div> <div class="price">Price: ${program.price}</div> <div class="duration">Duration: ${program.duration}</div></div>`;
+//         place_holder.appendChild(row);
+//       });
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// }
+
+function getClassesByDay($day) {
+  var endPoint = api + "?action=classesbyday";
+  fetch(endPoint, {
+    method: "GET",
+    mode: "cors",
+    credentials: "include",
+  })
+    .then(function (response) {
+      if (response.status !== 200) {
+        console.log("Looks like there was a problem. Status Code: " + response.status);
+      }
+      return response.json();
+    })
+    .then((jsonResponse) => {
+      const place_holder = document.getElementById("showclasses");
+      place_holder.innerHTML = null;
+      jsonResponse.data.map((program) => {
+        let row = document.createElement("div");
+        row.innerHTML = `<div class="row"><div class="title">Program: ${program.program_name}</div> <div class="price">Price: ${program.price}</div> <div class="duration">Duration: ${program.duration}</div></div>`;
+        place_holder.appendChild(row);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+

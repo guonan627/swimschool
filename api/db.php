@@ -2,7 +2,7 @@
 class DB
 {
     private $host = 'localhost:8889';
-    private $db_name = 'school';
+    private $db_name = 'swimschool';
     private $username = 'root';
     private $password = 'root';
     private $conn;
@@ -29,7 +29,7 @@ class DB
                 return array("username" => -1);
             } else {
                 if (password_verify($password, $result['password'])) {
-                // if ($password == $result['password']) {
+                    // if ($password == $result['password']) {
                     return $result;
                 } else {
                     return array("username" => -1);
@@ -41,7 +41,8 @@ class DB
         }
     }
 
-    public function signUp($username, $email, $password) {
+    public function signUp($username, $email, $password)
+    {
         try {
             $HashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $query = 'INSERT INTO login (username, email, password)
@@ -51,7 +52,7 @@ class DB
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':password', $HashedPassword);
             $result = $stmt->execute();
-            if($result == false) {
+            if ($result == false) {
                 return false;
             } else {
                 return $result;
@@ -59,11 +60,42 @@ class DB
             }
         } catch (PDOException $e) {
             echo $e;
-            echo "Register user error"; die();
+            echo "Register user error";
+            die();
         }
     }
 
-    public function findAllEmails() {
+    public function logging($action)
+    {
+        try {
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $time = date('d/m/y h:i:sa', time());
+            $ua = explode(" ", $_SERVER['HTTP_USER_AGENT']);
+            $browser = $ua[count($ua) - 1];
+
+            $query = 'INSERT INTO logging (action, time, ip, browser)
+            VALUES (:action, :time, :ip, :browser)';
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':action', $action);
+            $stmt->bindParam(':time', $time);
+            $stmt->bindParam(':ip', $ip);
+            $stmt->bindParam(':browser', $browser);
+            $result = $stmt->execute();
+            if ($result == false) {
+                return false;
+            } else {
+                return $result;
+                //$conn->lastInsertId();
+            }
+        } catch (PDOException $e) {
+            echo $e;
+            echo "DB logging error";
+            die();
+        }
+    }
+
+    public function findAllEmails()
+    {
         try {
             $query = 'SELECT email FROM login';
             $stmt = $this->conn->prepare($query);
@@ -202,25 +234,65 @@ class DB
         }
     }
 
-     // View Own Class
-     public function viewOwnClass($class_id)
-     {
-         try {
-             $query = 'SELECT * FROM program WHERE program_id = ' . $program_id;
-             $stmt = $this->conn->prepare($query);
-             $stmt->execute();
-             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-             if ($row == false) {
-                 return false;
-             } else {
-                 return $row;
-             }
-         } catch (PDOException $e) {
-             echo "get program error";
-             die();
-         }
-     }    
+    // Search Classes by Program
+    // public function getClassesByProgram($program_id)
+    // {
+    //     try {
+    //         $query = 'SELECT * FROM class WHERE program_id = ' . $program_id;
+    //         $stmt = $this->conn->prepare($query);
+    //         $stmt->execute();
+    //         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    //         if ($row == false) {
+    //             return false;
+    //         } else {
+    //             return $row;
+    //         }
+    //     } catch (PDOException $e) {
+    //         echo "get class error";
+    //         die();
+    //     }
+    // }
+
+    // Search Classes by Time
+    public function getClassesByDay($day)
+    {
+        try {
+            $query = 'SELECT * FROM class WHERE day = ' . $day;
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row == false) {
+                return false;
+            } else {
+                return $row;
+            }
+        } catch (PDOException $e) {
+            echo "get class error";
+            die();
+        }
+    }
+
+    // View Own Class
+    // public function viewOwnClass($class_id)
+    // {
+    //     try {
+    //         $query = 'SELECT * FROM program';
+    //         $stmt = $this->conn->prepare($query);
+    //         $stmt->execute();
+    //         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    //         if ($row == false) {
+    //             return false;
+    //         } else {
+    //             return $row;
+    //         }
+    //     } catch (PDOException $e) {
+    //         echo "get program error";
+    //         die();
+    //     }
+    // }
 
 
-    
+
+
+
 }
