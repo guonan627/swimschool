@@ -10,13 +10,16 @@ session_start();
 try {
     // database object
     $db = new DB();
-
+    // session object
+    $se = new sessionObject();
+    
     // parse json data in request body (from javascript fetch())
     $data = json_decode(file_get_contents("php://input"));
-
+    
     // assign session object
     if (!isset($_SESSION['sessionObj'])) {
-        $_SESSION['sessionObj'] = new sessionObject();
+        $_SESSION['sessionObj'] = $se;
+        // $_SESSION['sessionObj'] = new sessionObject();
     }
 
     // set session variables
@@ -48,7 +51,7 @@ try {
     if ($_SESSION['sessionObj']->oneDayRateLimit() == false) {
         throw new APIException("Daily rate limit exceeded");
     }
-
+    //how to refresh a new day?
     // debug
     // die(json_encode($_SESSION['sessionObj']->oneDayRateLimit()));
 
@@ -127,6 +130,13 @@ try {
             $duration = validate($data->duration, 'alphanumeric_space');
             if ($duration == false) {
                 throw new APIException("Duration value not valid");
+            }
+        }
+
+        if (isset($_GET['day'])) {
+            $day = validate($_GET['day'], 'alphanumeric_space');
+            if ($day == false) {
+                throw new APIException("class day not valid");
             }
         }
 
@@ -282,6 +292,56 @@ try {
                     $response->setHttpStatusCode(400);
                     $response->setSuccess(false);
                     $response->addMessage("Incorrect request method");
+                }
+                $response->send();
+                exit;
+                break;
+
+            case "findprogram":
+                $response = new Response();
+                if (isset($program_id)) {
+                    $result = $db->getProgram($program_id);
+                    // die(json_encode($result));
+                    if ($result == false) {
+                        $response->setHttpStatusCode(404);
+                        $response->setSuccess(false);
+                        $response->addMessage("Can't find the program with that ID");
+                    } else {
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($result);
+                        $db->logging('Fetched program ID: ' . $program_id);
+                        logFile('Fetched program ID: ' . $program_id);
+                    }
+                } else {
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please specify program ID");
+                }
+                $response->send();
+                exit;
+                break;
+            
+            case "classesbyday":
+                $response = new Response();
+                if (isset($day)) {
+                    $result = $db->getClassesByDay($day);
+                    // die(json_encode($result));
+                    if ($result == false) {
+                        $response->setHttpStatusCode(404);
+                        $response->setSuccess(false);
+                        $response->addMessage("Can't find the class on that day");
+                    } else {
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($result);
+                        $db->logging('find classes by : ' . $day);
+                        logFile('find classes by : ' . $day);
+                    }
+                } else {
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please select a day");
                 }
                 $response->send();
                 exit;

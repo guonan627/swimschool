@@ -234,6 +234,25 @@ class DB
         }
     }
 
+    // Search Classes by Time
+    public function getClassesByDay($day)
+    {
+        try {
+            $query = 'SELECT * FROM class WHERE daytime = ' . $day;
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row == false) {
+                return false;
+            } else {
+                return $row;
+            }
+        } catch (PDOException $e) {
+            echo "get class error";
+            die();
+        }
+    }
+    
     // Search Classes by Program
     // public function getClassesByProgram($program_id)
     // {
@@ -252,25 +271,6 @@ class DB
     //         die();
     //     }
     // }
-
-    // Search Classes by Time
-    public function getClassesByDay($day)
-    {
-        try {
-            $query = 'SELECT * FROM class WHERE day = ' . $day;
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($row == false) {
-                return false;
-            } else {
-                return $row;
-            }
-        } catch (PDOException $e) {
-            echo "get class error";
-            die();
-        }
-    }
 
     // View Own Class
     // public function viewOwnClass($class_id)
