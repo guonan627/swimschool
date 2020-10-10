@@ -1,10 +1,10 @@
 <?php
 class DB
 {
-    private $host = 'localhost';
+    private $host = 'localhost:8889';
     private $db_name = 'swimschool';
     private $username = 'root';
-    private $password = '';
+    private $password = 'root';
     private $conn;
     public function __construct()
     {

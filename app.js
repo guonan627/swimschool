@@ -6,7 +6,7 @@
 //   400
 // );
 
-var api = "http://localhost/swimschool/api/api.php";
+var api = "http://localhost:8888/swimschool/api/api.php";
 
 // address finder api start
 (function () {
