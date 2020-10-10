@@ -24,7 +24,7 @@ header {
 header img {
   float: right;
 }
-h5{
+h5 {
   text-align: center;
 }
 fieldset {
@@ -103,7 +103,7 @@ input[type="submit"]:disabled {
   border: 2px solid #ccc;
   border-radius: 15px;
   box-sizing: border-box;
-  background-color:rgba(51, 167, 206, 0.796);
+  background-color: rgba(51, 167, 206, 0.796);
   display: none;
 }
 #welcomearea {
@@ -125,14 +125,38 @@ input[type="submit"]:disabled {
 a {
   text-decoration: none;
 }
-#loginpage button{
+#loginpage button {
   margin-top: 20px;
- margin-left: 90px;
+  margin-left: 90px;
 }
-#registerpage .pulse{
+#registerpage .pulse {
   margin-top: 30px;
   margin-left: 90px;
 }
-#enrollpage #submitme{
+#enrollpage #submitme {
   margin-left: 80px;
+}
+
+.alert {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  z-index: 9999;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-align: center;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 1.6rem;
+  -webkit-box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.25);
+}
+.alert--success {
+  background-color: #20bf6b;
+}
+.alert--error {
+  background-color: #eb4d4b;
 }

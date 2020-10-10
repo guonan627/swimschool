@@ -12,19 +12,20 @@ try {
     $db = new DB();
     // session object
     $se = new sessionObject();
-    
+
     // parse json data in request body (from javascript fetch())
     $data = json_decode(file_get_contents("php://input"));
-    
+
     // assign session object
     if (!isset($_SESSION['sessionObj'])) {
         $_SESSION['sessionObj'] = $se;
         // $_SESSION['sessionObj'] = new sessionObject();
     }
 
+    // Security
     // set session variables
     $_SESSION['sessionObj']->setIp($_SERVER['REMOTE_ADDR']);
-    
+
     if ($_SESSION['sessionObj']->getStartTime() == null) {
         $_SESSION['sessionObj']->setStartTime(time());
     }
@@ -43,6 +44,9 @@ try {
         $sec = abs($curr - $last);
         if ($sec <= 1) {
             throw new APIException("Rate limit exceeded");
+            http_response_code(429);
+            return false;
+            die();
         }
     }
     $_SESSION['LAST_CALL'] = date("Y-m-d h:i:s");
@@ -50,8 +54,10 @@ try {
     // session rate limiter: 1000 requests/day
     if ($_SESSION['sessionObj']->oneDayRateLimit() == false) {
         throw new APIException("Daily rate limit exceeded");
+        die();
+        http_response_code(429);
+        return false;
     }
-    //how to refresh a new day?
     // debug
     // die(json_encode($_SESSION['sessionObj']->oneDayRateLimit()));
 
@@ -60,6 +66,7 @@ try {
         if ($validated_action == false) {
             throw new APIException("Action code is not valid");
         }
+
 
         // VALIDATORS
 
@@ -134,7 +141,8 @@ try {
         }
 
         if (isset($_GET['day'])) {
-            $day = validate($_GET['day'], 'alphanumeric_space');
+            $day = validate($_GET['day'], 'alpha');
+
             if ($day == false) {
                 throw new APIException("class day not valid");
             }
@@ -165,6 +173,17 @@ try {
                     $response->setSuccess(false);
                     $response->addMessage("Please provide username and password");
                 }
+                $response->send();
+                exit;
+                break;
+
+            case "logout":
+                $response = new Response();
+                $_SESSION['sessionObj'] = null;
+                session_destroy();
+                $response->setHttpStatusCode(200);
+                $response->setSuccess(true);
+                $response->addMessage("You logged out successfully");
                 $response->send();
                 exit;
                 break;
@@ -233,18 +252,25 @@ try {
 
             case "addprogram":
                 $response = new Response();
-                if (isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration)) {
-                    $result = $db->addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration);
-                    $response->setHttpStatusCode(200);
-                    $response->setSuccess(true);
-                    $response->setData($result);
-                    $db->logging('Added new program: ' . $program_name);
-                    logFile('Added new program: ' . $program_name);
+                if ($_SESSION['sessionObj']->isLoggedIn()) {
+                    if (isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration)) {
+                        $result = $db->addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration);
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($result);
+                        $db->logging('Added new program: ' . $program_name);
+                        logFile('Added new program: ' . $program_name);
+                    } else {
+                        $response->setHttpStatusCode(400);
+                        $response->setSuccess(false);
+                        $response->addMessage("Please provide program name, description, program level, price, prerequisites and duration.");
+                    }
                 } else {
-                    $response->setHttpStatusCode(400);
+                    $response->setHttpStatusCode(401);
                     $response->setSuccess(false);
-                    $response->addMessage("Please provide program name, description, program level, price, prerequisites and duration.");
+                    $response->addMessage("You are not logged in.");
                 }
+
                 $response->send();
                 exit;
                 break;
@@ -321,11 +347,11 @@ try {
                 $response->send();
                 exit;
                 break;
-            
+
             case "classesbyday":
                 $response = new Response();
                 if (isset($day)) {
-                    $result = $db->getClassesByDay($day);
+                    $result = $db->getAllClasses($day);
                     // die(json_encode($result));
                     if ($result == false) {
                         $response->setHttpStatusCode(404);

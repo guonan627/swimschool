@@ -1,24 +1,31 @@
-$("html,body").animate(
-  {
-    scrollTop: 0,
-    screenLeft: 0,
-  },
-  400
-);
+// $("html,body").animate(
+//   {
+//     scrollTop: 0,
+//     screenLeft: 0,
+//   },
+//   400
+// );
 
-var api = "http://localhost:8888/swimschool/api/api.php";
+var api = "http://localhost/swimschool/api/api.php";
 
 // address finder api start
 (function () {
   var widget,
     initAddressFinder = function () {
-      widget = new AddressFinder.Widget(document.getElementById("addrs_1"), "QD98EA7GCN4P6RLYVUJH", "AU", {
-        address_params: {
-          gnaf: "1",
-        },
-      });
+      widget = new AddressFinder.Widget(
+        document.getElementById("addrs_1"),
+        "QD98EA7GCN4P6RLYVUJH",
+        "AU",
+        {
+          address_params: {
+            gnaf: "1",
+          },
+        }
+      );
       widget.on("result:select", function (fullAddress, metaData) {
-        var combinedAddressLine1And2 = !metaData.address_line_2 ? metaData.address_line_1 : metaData.address_line_1 + ", " + metaData.address_line_2;
+        var combinedAddressLine1And2 = !metaData.address_line_2
+          ? metaData.address_line_1
+          : metaData.address_line_1 + ", " + metaData.address_line_2;
 
         // You will need to update these ids to match those in your form
         document.getElementById("addrs_1").value = combinedAddressLine1And2;
@@ -41,12 +48,12 @@ var api = "http://localhost:8888/swimschool/api/api.php";
 // address finder api end
 
 window.onload = function () {
-  // pure js method
+  // 1. pure js method
   // var show = document.getElementsByClassName("display");
   // for (let i = 0; i < show.length; i++) {
   //   show[i].style.display = "none";
   // }
-  // jquery method
+  // 2. jquery method
   var show = $(".display");
   show.hide();
   homepage.style.display = "block";
@@ -80,38 +87,6 @@ function flogin() {
   var show = $(".display");
   show.hide();
   loginpage.style.display = "block";
-
-  var registershow = $("#register");
-  registershow.hide();
-  var loginshow = $("#login");
-  loginshow.hide();
-  var logoutshow = $("#logout");
-  logoutshow.show();
-  var enrollshow = $("#enroll");
-  enrollshow.show();
-  var myclassshow = $("#myclass");
-  myclassshow.show();
-  var settingshow = $("#setting");
-  settingshow.show();
-}
-
-function flogout() {
-  var show = $(".display");
-  show.hide();
-  loginpage.style.display = "block";
-
-  var logoutshow = $("#logout");
-  logoutshow.hide();
-  var enrollshow = $("#enroll");
-  enrollshow.hide();
-  var myclassshow = $("#myclass");
-  myclassshow.hide();
-  var settingshow = $("#setting");
-  settingshow.hide();
-  var loginshow = $("#login");
-  loginshow.show();
-  var registershow = $("#register");
-  registershow.show();
 }
 
 function fho() {
@@ -212,20 +187,26 @@ function submitLogin(event) {
       method: "post",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", //all echo statements are json_encode
       },
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((res) => {
         if (res.statusCode === 401) {
-          alert("Incorrect username or password.");
+          showAlert("error", "Incorrect username or password");
           localStorage.removeItem("token");
+          localStorage.removeItem("userid");
           return;
         }
         if (res.statusCode === 200) {
-          alert(`Welcome ${res.data.username}, you have successfully logged in.`);
-          localStorage.setItem("token", res.data.auth);
+          showAlert(
+            "success",
+            `Welcome ${res.data.username}, you have successfully logged in.`
+          );
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("userid", res.data.userid);
+          refreshMenu();
           fho();
         }
       })
@@ -233,8 +214,42 @@ function submitLogin(event) {
   }
 }
 
+function isLoggedin() {
+  if (localStorage.getItem("token") && localStorage.getItem("userid"))
+    return true;
+
+  return false;
+}
+
+function logout() {
+  var endPoint = api + "?action=logout";
+  fetch(endPoint, {
+    method: "GET",
+    mode: "cors",
+  })
+    .then(function (response) {
+      if (response.status !== 200) {
+        console.log("Logout failed." + response);
+        showAlert("error", "Logout failed.");
+        return;
+      }
+      var show = $(".display");
+      show.hide();
+      homepage.style.display = "block";
+      localStorage.removeItem("token");
+      localStorage.removeItem("userid");
+      refreshMenu();
+      showAlert("success", "You have logged out");
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+}
+
+// function websocket
+
 function handleReg(event) {
-  event.preventDefault();
+  event.preventDefault(); // the default action that belongs to the event will not occur.
   var validForm = true;
   // username
   var username = document.getElementById("un");
@@ -293,13 +308,13 @@ function handleReg(event) {
       method: "post",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", //all echo statements are json_encode
       },
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((res) => {
-        alert(`Welcome, you have successfully registered.`);
+        showAlert("success", "You have successfully registered.");
         fho();
       });
   }
@@ -406,7 +421,11 @@ function handleReg(event) {
     }
     // handle form submission
     if (valid === false) {
-      $("#bigerror").show().text("Please fix the errors").delay(2000).fadeOut(2000);
+      $("#bigerror")
+        .show()
+        .text("Please fix the errors")
+        .delay(2000)
+        .fadeOut(2000);
     } else {
       alert("Form submitted successfully");
       // var spinner = document.getElementById("spinner");
@@ -417,17 +436,17 @@ function handleReg(event) {
       // }, 2000);
     }
   }
+}
 
-  function switchbg(checkIT) {
-    if (checkIT.checked == true) {
-      document.body.style.backgroundColor = "rgba(50,50,50)";
-      document.body.style.color = "grey";
-      localStorage.setItem("bg", "dark");
-    } else {
-      document.body.style.backgroundColor = "lightblue";
-      document.body.style.color = "black";
-      localStorage.setItem("bg", "bright");
-    }
+function switchbg(checkIT) {
+  if (checkIT.checked == true) {
+    document.body.style.backgroundColor = "rgba(50,50,50)";
+    document.body.style.color = "grey";
+    localStorage.setItem("bg", "dark");
+  } else {
+    document.body.style.backgroundColor = "lightblue";
+    document.body.style.color = "black";
+    localStorage.setItem("bg", "bright");
   }
 }
 
@@ -440,16 +459,22 @@ function getAllPrograms() {
   })
     .then(function (response) {
       if (response.status !== 200) {
-        console.log("Looks like there was a problem. Status Code: " + response.status);
+        console.log("Looks like there was a problem. Status Code: " + response);
       }
       return response.json();
     })
     .then((jsonResponse) => {
-      const place_holder = document.getElementById("programs");
+      var place_holder = document.getElementById("programs");
       place_holder.innerHTML = null;
       jsonResponse.data.map((program) => {
         let row = document.createElement("div");
-        row.innerHTML = `<div class="row"><div class="title">Program: ${program.program_name}</div> <div class="price">Price: ${program.price}</div> <div class="duration">Duration: ${program.duration}</div></div>`;
+        row.innerHTML = `
+          <div class="row">
+            <div class="title">Program: ${program.program_name}</div>
+            <div class="price">Price: ${program.price}</div>
+            <div class="duration">Duration: ${program.duration}</div>
+          </div>
+        `;
         place_holder.appendChild(row);
       });
     })
@@ -460,36 +485,15 @@ function getAllPrograms() {
 
 getAllPrograms();
 
+function getAllClasses() {
+  var day = document.getElementById("days").value;
+  var place_holder = document.getElementById("showclasses");
+  place_holder.innerHTML = "Loading...";
 
-// function getClassesByProgram() {
-//   var endPoint = api + "?action=classesbyprogram";
-//   fetch(endPoint, {
-//     method: "GET",
-//     mode: "cors",
-//     credentials: "include",
-//   })
-//     .then(function (response) {
-//       if (response.status !== 200) {
-//         console.log("Looks like there was a problem. Status Code: " + response.status);
-//       }
-//       return response.json();
-//     })
-//     .then((jsonResponse) => {
-//       const place_holder = document.getElementById("showclasses");
-//       place_holder.innerHTML = null;
-//       jsonResponse.data.map((program) => {
-//         let row = document.createElement("div");
-//         row.innerHTML = `<div class="row"><div class="title">Program: ${program.program_name}</div> <div class="price">Price: ${program.price}</div> <div class="duration">Duration: ${program.duration}</div></div>`;
-//         place_holder.appendChild(row);
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// }
+  if (!day) return alert("Please select a day");
 
-function getClassesByDay($day) {
-  var endPoint = api + "?action=classesbyday";
+  var endPoint = api + "?action=classesbyday&day=" + day;
+
   fetch(endPoint, {
     method: "GET",
     mode: "cors",
@@ -497,17 +501,37 @@ function getClassesByDay($day) {
   })
     .then(function (response) {
       if (response.status !== 200) {
-        console.log("Looks like there was a problem. Status Code: " + response.status);
+        console.log(
+          "Looks like there was a problem. Status Code: " + response.status
+        );
+        place_holder.innerHTML =
+          "Failed to get classes, please try again later";
       }
       return response.json();
     })
     .then((jsonResponse) => {
-      const place_holder = document.getElementById("showclasses");
-      place_holder.innerHTML = null;
-      jsonResponse.data.map((program) => {
-        let row = document.createElement("div");
-        row.innerHTML = `<div class="row"><div class="title">Program: ${program.program_name}</div> <div class="price">Price: ${program.price}</div> <div class="duration">Duration: ${program.duration}</div></div>`;
-        place_holder.appendChild(row);
+      place_holder.innerHTML = null; // reset content
+      jsonResponse.data.forEach((c) => {
+        let card = document.createElement("div");
+        card.innerHTML = `
+          <div class="col s12 m6">
+            <div class="card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title">${c.program_name}</span>
+                <p>Starts: ${c.start_date}</p>
+                <p>Ends: ${c.end_date}</p>
+                <p>Time: ${c.time}</p>
+                <p>Trainer: ${c.trainer_name}</p>
+                <p>Max Students: ${c.max_number}</p>
+                <p>Description: ${c.description}</p>
+              </div>
+              <div class="card-action">
+                <a href="#">Book</a>
+              </div>
+            </div>
+          </div>
+        `;
+        place_holder.appendChild(card);
       });
     })
     .catch((err) => {
@@ -515,3 +539,46 @@ function getClassesByDay($day) {
     });
 }
 
+function refreshMenu() {
+  if (isLoggedin()) {
+    $("#register").hide();
+    $("#login").hide();
+    $("#logout").show();
+    $("#enroll").show();
+    $("#myclass").show();
+    $("#setting").show();
+  } else {
+    $("#logout").hide();
+    $("#enroll").hide();
+    $("#myclass").hide();
+    $("#setting").hide();
+    $("#login").show();
+    $("#register").show();
+  }
+}
+
+const sideBarBtn = document.querySelector(".sidenav-trigger");
+
+if (sideBarBtn) {
+  sideBarBtn.addEventListener("click", () => {
+    refreshMenu();
+  });
+}
+
+function hideAlert() {
+  const el = document.querySelector(".alert");
+  if (el) el.parentElement.removeChild(el);
+}
+
+function showAlert(type, msg) {
+  hideAlert();
+  const markup = `<div class="alert alert--${type}">${msg}</div>`;
+  document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
+  window.setTimeout(function () {
+    $(".alert").fadeOut(2000, function () {
+      $(this).remove();
+    });
+  }, 3000);
+}
+
+refreshMenu();

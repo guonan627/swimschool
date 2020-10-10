@@ -30,7 +30,7 @@
           <li class="navshow" id="login" onclick="flogin()"><a class="waves-effect" href="#registerpage"><i
                 class="material-icons">account_box</i>Log In</a>
           </li>
-          <li class="navshow" id="logout" onclick="flogout()"><a class="waves-effect" href="#registerpage"><i
+          <li class="navshow" id="logout" onclick="logout()"><a class="waves-effect" href="#registerpage"><i
                 class="material-icons">account_box</i>Log Out</a>
           </li>
           <li class="navshow" id="home" onclick="fho()"><a class="waves-effect" href="#homepage"><i
@@ -332,21 +332,24 @@
       <!-- class-time filter -->
       <div class="row">
         <div class="input-field col s8">
-          <select>
+          <select id="days" name="days">
             <option value="" disabled selected>by day</option>
-            <option value="1">Mon</option>
-            <option value="2">Tue</option>
-            <option value="3">wed</option>
-            <option value="4">Thu</option>
-            <option value="5">Fri</option>
-            <option value="6">Sat</option>
+            <option value="Mon">Mon</option>
+            <option value="Tue">Tue</option>
+            <option value="Wed">Wed</option>
+            <option value="Thu">Thu</option>
+            <option value="Fri">Fri</option>
+            <option value="Sat">Sat</option>
           </select>
         </div>
         <div class="input-field col s4">
-          <a class="waves-effect waves-light btn light-blue" onclick="getClassesByDay()">search</a>
+          <a class="waves-effect waves-light btn light-blue" onclick="getAllClasses()">search</a>
         </div>
       </div>
-      <div id="showclasses">show classes</div>
+
+      <div id="showclasses" class="row">
+
+      </div>
     </div>
 
     <!-- enroll page -->

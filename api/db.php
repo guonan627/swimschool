@@ -1,10 +1,10 @@
 <?php
 class DB
 {
-    private $host = 'localhost:8889';
+    private $host = 'localhost';
     private $db_name = 'swimschool';
     private $username = 'root';
-    private $password = 'root';
+    private $password = '';
     private $conn;
     public function __construct()
     {
@@ -235,24 +235,24 @@ class DB
     }
 
     // Search Classes by Time
-    public function getClassesByDay($day)
+    public function getAllClasses($day)
     {
         try {
-            $query = 'SELECT * FROM class WHERE daytime = ' . $day;
+            $query = 'SELECT * FROM class INNER JOIN program ON class.program_id = program.program_id WHERE daytime = "' . $day . '"';
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if ($row == false) {
                 return false;
             } else {
                 return $row;
             }
         } catch (PDOException $e) {
-            echo "get class error";
+            echo $e;
             die();
         }
     }
-    
+
     // Search Classes by Program
     // public function getClassesByProgram($program_id)
     // {

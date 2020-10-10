@@ -70,15 +70,7 @@ class sessionObject
         }
         return $this->_requestCounter;
     }
-
-    public function isAuth()
-    {
-        if ($this->_token !== null) {
-            return array('auth' => $this->_token, 'username' => $this->_username, 'userid' => $this->_userid, 'role' => $this->_role);
-        } else {
-            return array('auth' => -1);
-        }
-    }
+    // how to refresh 
 
     // set session variables upon successful login
     public function setAuth($incomingAuth)
@@ -101,8 +93,8 @@ class sessionObject
         return array("username" => "-1");
     }
 
-    // Get header Authorization from frontend requests
-    public function getBearerToken()
+    // Get the bearer token from Authorization Header of incoming HTTP requests
+    private function getBearerToken()
     {
         $headers = null;
         if (isset($_SERVER['Authorization'])) {
@@ -125,5 +117,17 @@ class sessionObject
             }
         }
         return null;
+    }
+
+    public function isLoggedIn()
+    {
+        $bearerToken = $this->getBearerToken();
+        if ($bearerToken == null)
+            return false;
+
+        if ($bearerToken !== $this->_token)
+            return false;
+
+        return true;
     }
 }
