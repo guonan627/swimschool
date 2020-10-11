@@ -319,122 +319,123 @@ function handleReg(event) {
       });
   }
 
-  function validateGender() {
-    var genderRadios = document.querySelectorAll('[name="group"]');
-    var error = document.querySelector("#errorgender");
-    var validGender = false;
-    for (var i = 0; i < genderRadios.length; i++) {
-      if (genderRadios[i].checked) {
-        validGender = true;
-      }
-    }
-    if (!validGender) {
-      error.style.display = "block";
-      error.innerHTML = "Gender is required";
-      console.log("Gender missing");
-      return false;
-    } else {
-      error.innerHTML = "";
-      return true;
+}
+
+function validateGender() {
+  var genderRadios = document.querySelectorAll('[name="group"]');
+  var error = document.querySelector("#errorgender");
+  var validGender = false;
+  for (var i = 0; i < genderRadios.length; i++) {
+    if (genderRadios[i].checked) {
+      validGender = true;
     }
   }
+  if (!validGender) {
+    error.style.display = "block";
+    error.innerHTML = "Gender is required";
+    console.log("Gender missing");
+    return false;
+  } else {
+    error.innerHTML = "";
+    return true;
+  }
+}
 
-  var checker = document.getElementById("checkit");
-  var submitBtn = document.getElementById("submitme");
-  checker.addEventListener("change", function () {
-    if (this.checked) {
-      submitBtn.disabled = false;
-    } else {
-      submitBtn.disabled = true;
-    }
-  });
+var checker = document.getElementById("checkit");
+var submitBtn = document.getElementById("submitme");
+checker.addEventListener("change", function () {
+  if (this.checked) {
+    submitBtn.disabled = false;
+  } else {
+    submitBtn.disabled = true;
+  }
+});
 
-  function validateEnroll(event) {
-    event.preventDefault();
-    var valid = true;
-    // first name
-    var ln = document.getElementById("fn");
-    var errorsn = document.getElementById("errorfn");
-    if (!ln.checkValidity()) {
-      errorsn.style.display = "block";
-      valid = false;
-    } else {
-      errorsn.style.display = "none";
-    }
-    // last name
-    var ln = document.getElementById("ln");
-    var errorfn = document.getElementById("errorln");
-    if (!ln.checkValidity()) {
-      errorfn.style.display = "block";
-      valid = false;
-    } else {
-      errorfn.style.display = "none";
-    }
-    // gender
-    if (!validateGender()) {
-      valid = false;
-    }
-    // Date of Birth
-    var dob = document.getElementById("dob");
-    var errordob = document.getElementById("errordob");
-    if (!dob.checkValidity()) {
-      errordob.style.display = "block";
-      valid = false;
-    } else {
-      errordob.style.display = "none";
-    }
-    // Address
-    var ad = document.getElementById("ad");
-    var errorad = document.getElementById("errorad");
-    if (!ad.checkValidity()) {
-      errorad.style.display = "block";
-      valid = false;
-    } else {
-      errorad.style.display = "none";
-    }
-    // Phone
-    var p2 = document.getElementById("p2");
-    var errorp2 = document.getElementById("errorp2");
-    if (!p2.checkValidity()) {
-      errorp2.style.display = "block";
-      valid = false;
-    } else {
-      errorp2.style.display = "none";
-    }
-    // program
-    var pro = document.getElementById("pro");
-    var errorpro = document.getElementById("errorpro");
-    if (!pro.checkValidity()) {
-      errorpro.style.display = "block";
-      valid = false;
-    } else {
-      errorpro.style.display = "none";
-    }
-    // class
-    var cla = document.getElementById("cla");
-    var errorcla = document.getElementById("errorcla");
-    if (!cla.checkValidity()) {
-      errorcla.style.display = "block";
-      valid = false;
-    } else {
-      errorcla.style.display = "none";
-    }
-    // handle form submission
-    if (valid === false) {
-      $("#bigerror")
-        .show()
-        .text("Please fix the errors")
-        .delay(2000)
-        .fadeOut(2000);
-    } else {
-      alert("Form submitted successfully");
-      // var spinner = document.getElementById("spinner");
-      // spinner.style.display = "block";
-      // window.setTimeout(() => {
-      //   spinner.style.display = "none";
-      //   alert("Form submitted successfully");
-      // }, 2000);
-    }
+function validateEnroll(event) {
+  event.preventDefault();
+  var valid = true;
+  // first name
+  var ln = document.getElementById("fn");
+  var errorsn = document.getElementById("errorfn");
+  if (!ln.checkValidity()) {
+    errorsn.style.display = "block";
+    valid = false;
+  } else {
+    errorsn.style.display = "none";
+  }
+  // last name
+  var ln = document.getElementById("ln");
+  var errorfn = document.getElementById("errorln");
+  if (!ln.checkValidity()) {
+    errorfn.style.display = "block";
+    valid = false;
+  } else {
+    errorfn.style.display = "none";
+  }
+  // gender
+  if (!validateGender()) {
+    valid = false;
+  }
+  // Date of Birth
+  var dob = document.getElementById("dob");
+  var errordob = document.getElementById("errordob");
+  if (!dob.checkValidity()) {
+    errordob.style.display = "block";
+    valid = false;
+  } else {
+    errordob.style.display = "none";
+  }
+  // Address
+  var ad = document.getElementById("ad");
+  var errorad = document.getElementById("errorad");
+  if (!ad.checkValidity()) {
+    errorad.style.display = "block";
+    valid = false;
+  } else {
+    errorad.style.display = "none";
+  }
+  // Phone
+  var p2 = document.getElementById("p2");
+  var errorp2 = document.getElementById("errorp2");
+  if (!p2.checkValidity()) {
+    errorp2.style.display = "block";
+    valid = false;
+  } else {
+    errorp2.style.display = "none";
+  }
+  // program
+  var pro = document.getElementById("pro");
+  var errorpro = document.getElementById("errorpro");
+  if (!pro.checkValidity()) {
+    errorpro.style.display = "block";
+    valid = false;
+  } else {
+    errorpro.style.display = "none";
+  }
+  // class
+  var cla = document.getElementById("cla");
+  var errorcla = document.getElementById("errorcla");
+  if (!cla.checkValidity()) {
+    errorcla.style.display = "block";
+    valid = false;
+  } else {
+    errorcla.style.display = "none";
+  }
+  // handle form submission
+  if (valid === false) {
+    $("#bigerror")
+      .show()
+      .text("Please fix the errors")
+      .delay(2000)
+      .fadeOut(2000);
+  } else {
+    alert("Form submitted successfully");
+    // var spinner = document.getElementById("spinner");
+    // spinner.style.display = "block";
+    // window.setTimeout(() => {
+    //   spinner.style.display = "none";
+    //   alert("Form submitted successfully");
+    // }, 2000);
   }
 }
 

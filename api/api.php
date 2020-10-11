@@ -58,6 +58,7 @@ try {
         http_response_code(429);
         return false;
     }
+    // how to refresh the past 24 hours' counter
     // debug
     // die(json_encode($_SESSION['sessionObj']->oneDayRateLimit()));
 
@@ -373,6 +374,8 @@ try {
                 exit;
                 break;
 
+
+                
             default:
                 throw new APIException("incorrect action code");
                 break;
