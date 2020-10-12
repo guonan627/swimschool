@@ -33,9 +33,14 @@ try {
     $counter = $_SESSION['sessionObj']->getRequestCounter();
     if ($counter == null) {
         $_SESSION['sessionObj']->setRequestCounter(1);
+        // $firstcall = strtotime(date("Y-m-d h:i:s");
     } else {
         $_SESSION['sessionObj']->setRequestCounter($counter + 1);
     }
+    // $d = $curr - $curr;
+    // if ($d >= 86400) {
+    //        $counter == null;
+    // }
 
     // general rate limiter: 1 request/sec
     if (isset($_SESSION['LAST_CALL'])) {
@@ -58,7 +63,7 @@ try {
         http_response_code(429);
         return false;
     }
-    // how to refresh the past 24 hours' counter
+
     // debug
     // die(json_encode($_SESSION['sessionObj']->oneDayRateLimit()));
 
@@ -96,6 +101,13 @@ try {
             $program_id = validate($_GET['program_id'], 'integer');
             if ($program_id == false) {
                 throw new APIException("Program ID not valid");
+            }
+        }
+
+        if (isset($_GET['class_id'])) {
+            $class_id = validate($_GET['class_id'], 'integer');
+            if ($class_id == false) {
+                throw new APIException("class day not valid");
             }
         }
 
@@ -374,8 +386,81 @@ try {
                 exit;
                 break;
 
+            case "classesbyprogram":
+                $response = new Response();
+                if (isset($program_id)) {
+                    $result = $db->getClassesByProgram($program_id);
+                    // die(json_encode($result));
+                    if ($result == false) {
+                        $response->setHttpStatusCode(404);
+                        $response->setSuccess(false);
+                        $response->addMessage("Can't find the class under that program");
+                    } else {
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($result);
+                        $db->logging('find classes by : ' . $program_id);
+                        logFile('find classes by : ' . $program_id);
+                    }
+                } else {
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please select a program");
+                }
+                $response->send();
+                exit;
+                break;
 
-                
+            case "classbyid":
+                $response = new Response();
+                if (isset($class_id)) {
+                    $result = $db->getClassById($class_id);
+                    if ($result == false) {
+                        $response->setHttpStatusCode(404);
+                        $response->setSuccess(false);
+                        $response->addMessage("Can't find the class with that ID");
+                    } else {
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($result);
+                        $db->logging('find classes by : ' . $class_id);
+                        logFile('find classes by : ' . $class_id);
+                    }
+                } else {
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please provide a class ID");
+                }
+                $response->send();
+                exit;
+                break;
+
+                // case "viewmyclass":
+                //     $response = new Response();
+                //     if (isset($user_id)) {
+                //         $result = $db->getAllClasses($user_id);
+                //         // die(json_encode($result));
+                //         if ($result == false) {
+                //             $response->setHttpStatusCode(404);
+                //             $response->setSuccess(false);
+                //             $response->addMessage("You have not enrolled any");
+                //         }else {
+                //             $response->setHttpStatusCode(200);
+                //             $response->setSuccess(true);
+                //             $response->setData($result);
+                //             $db->logging('find classes by : ' . $user_id);
+                //             logFile('find classes by : ' . $user_id);
+                //         }
+                //     } else {
+                //         $response->setHttpStatusCode(400);
+                //         $response->setSuccess(false);
+                //         $response->addMessage("");
+                //     }
+                //     $response->send();
+                //     exit;
+                //     break;
+
+
             default:
                 throw new APIException("incorrect action code");
                 break;

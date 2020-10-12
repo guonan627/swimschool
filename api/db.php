@@ -253,46 +253,60 @@ class DB
         }
     }
 
-    // Search Classes by Program
-    // public function getClassesByProgram($program_id)
-    // {
-    //     try {
-    //         $query = 'SELECT * FROM class WHERE program_id = ' . $program_id;
-    //         $stmt = $this->conn->prepare($query);
-    //         $stmt->execute();
-    //         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    //         if ($row == false) {
-    //             return false;
-    //         } else {
-    //             return $row;
-    //         }
-    //     } catch (PDOException $e) {
-    //         echo "get class error";
-    //         die();
-    //     }
-    // }
+    //Search Classes by Program
+    public function getClassesByProgram($program_id)
+    {
+        try {
+            $query = 'SELECT * FROM class INNER JOIN program ON class.program_id = program.program_id WHERE class.program_id = "' . $program_id . '"';
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($row == false) {
+                return false;
+            } else {
+                return $row;
+            }
+        } catch (PDOException $e) {
+            echo $e;
+            die();
+        }
+    }
 
-    // View Own Class
-    // public function viewOwnClass($class_id)
-    // {
-    //     try {
-    //         $query = 'SELECT * FROM program';
-    //         $stmt = $this->conn->prepare($query);
-    //         $stmt->execute();
-    //         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    //         if ($row == false) {
-    //             return false;
-    //         } else {
-    //             return $row;
-    //         }
-    //     } catch (PDOException $e) {
-    //         echo "get program error";
-    //         die();
-    //     }
-    // }
+    //Search Class by ID
+    public function getClassById($class_id)
+    {
+        try {
+            $query = 'SELECT * FROM class WHERE class.class_id = "' . $class_id . '"';
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row == false) {
+                return false;
+            } else {
+                return $row;
+            }
+        } catch (PDOException $e) {
+            echo $e;
+            die();
+        }
+    }
 
-
-
-
-
+    //View Own Class
+    public function viewOwnClass($user_id)
+    {
+        try {
+            $query = 'SELECT * FROM class INNER JOIN enrolled ON class.class_id = enrolled.class_id INNER JOIN program ON class.program_id = program.program_id WHERE enrolled.login_id = "' . $user_id . '"';
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row == false) {
+                return false;
+            } else {
+                return $row;
+            }
+        } catch (PDOException $e) {
+            echo $e;
+            die();
+        }
+    }
 }

@@ -40,11 +40,10 @@
                 class="material-icons">view_list</i>Programs Introduction</a>
           </li>
           <li class="navshow" id="classes" onclick="fcl()"><a class="waves-effect" href="#classpage"><i
-                class="material-icons">access_time</i>Search and Enroll
-              Classes</a></li>
-          <li class="navshow" id="enroll" onclick="fen()"><a class="waves-effect" href="#enrollpage"><i
+                class="material-icons">filter_center_focus</i>Search and Enroll</a></li>
+          <!-- <li class="navshow" id="enroll" onclick="fen()"><a class="waves-effect" href="#enrollpage"><i
                 class="material-icons">filter_center_focus</i>Enroll</a>
-          </li>
+          </li> -->
           <li class="navshow" id="myclass" onclick="fmy()"><a class="waves-effect" href="#myclasspage"><i
                 class="material-icons">class</i>My
               Class</a></li>
@@ -316,13 +315,13 @@
       <!-- program filter -->
       <div class="row">
         <div class="input-field col s8">
-          <select>
-            <option value="" disabled selected>by program</option>
-            <option value="1">parent and baby</option>
-            <option value="2">leap frog</option>
-            <option value="3">safe swimming</option>
-            <option value="4">swim perfect</option>
-            <option value="5">pre-team</option>
+          <select id="program_id" name="program_id">
+            <option value="" disabled selected>Choose a program</option>
+            <option value="1">Parent And Baby</option>
+            <option value="2">Leap Frog</option>
+            <option value="3">Safe Swimming</option>
+            <option value="4">Swim Perfect</option>
+            <option value="5">Pre-Team</option>
           </select>
         </div>
         <div class="input-field col s4">
@@ -333,17 +332,17 @@
       <div class="row">
         <div class="input-field col s8">
           <select id="days" name="days">
-            <option value="" disabled selected>by day</option>
-            <option value="Mon">Mon</option>
-            <option value="Tue">Tue</option>
-            <option value="Wed">Wed</option>
-            <option value="Thu">Thu</option>
-            <option value="Fri">Fri</option>
-            <option value="Sat">Sat</option>
+            <option value="" disabled selected>Choose a day</option>
+            <option value="Mon">Monday</option>
+            <option value="Tue">Tuesday</option>
+            <option value="Wed">Wednesday</option>
+            <option value="Thu">Thursday</option>
+            <option value="Fri">Friday</option>
+            <option value="Sat">Saturday</option>
           </select>
         </div>
         <div class="input-field col s4">
-          <a class="waves-effect waves-light btn light-blue" onclick="getAllClasses()">search</a>
+          <a class="waves-effect waves-light btn light-blue" onclick="getClassesByDay()">search</a>
         </div>
       </div>
 
@@ -428,15 +427,6 @@
               </div>
             </div>
             <!-- address -->
-            <!-- <div class="row">
-              <div class="input-field col s12">
-                <i class="material-icons prefix">account_balance</i>
-                <input class="validate" id="ad" type="text" pattern="[0-9{6}" minlength="6" maxlength="20"
-                  title="address" name="address" required />
-                <label for="ad">Address</label>
-                <div class="error" id="errorad">Please enter a valid address</div>
-              </div>
-            </div> -->
             <div class="row">
               <div class="input-field col s12">
                 <i class="material-icons prefix">account_balance</i>
@@ -456,13 +446,12 @@
             <div class="input-field col s12">
               <i class="material-icons prefix">event</i>
               <select id="pro" required>
-                <option value="" disabled selected>Choose Program</option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-                <option value="4">Option 4</option>
-                <option value="5">Option 5</option>
-                <option value="6">Option 6</option>
+                <option value="" disabled selected>Choose a program</option>
+                <option value="1">Parent And Baby</option>
+                <option value="2">Leap Frog</option>
+                <option value="3">Safe Swimming</option>
+                <option value="4">Swim Perfect</option>
+                <option value="5">Pre-Team</option>
               </select>
               <div class="error" id="errorpro">Please choose a program</div>
             </div>
@@ -470,13 +459,13 @@
             <div class="input-field col s12">
               <i class="material-icons prefix">access_alarms</i>
               <select id="cla" required>
-                <option value="" disabled selected>Choose Class Time</option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-                <option value="4">Option 4</option>
-                <option value="5">Option 5</option>
-                <option value="6">Option 6</option>
+                <option value="" disabled selected>Choose a day</option>
+                <option value="Mon">Monday</option>
+                <option value="Tue">Tuesday</option>
+                <option value="Wed">Wednesday</option>
+                <option value="Thu">Thursday</option>
+                <option value="Fri">Friday</option>
+                <option value="Sat">Saturday</option>
               </select>
               <div class="error" id="errorcla">Please choose a class time</div>
             </div>
@@ -492,8 +481,8 @@
             </div>
 
             <!-- Modal Trigger + waves effect -->
-            <a class="waves-effect waves-light btn modal-trigger light-blue" href="#modal1"
-              style="margin-left:10px;">Policies</a>
+            <a class="waves-effect waves-light btn modal-trigger light-blue" href="#modal1" style="margin-left:10px;">
+              Read Policies</a>
             <!-- Modal Structure -->
             <div id="modal1" class="modal">
               <div class="modal-content">
@@ -535,6 +524,9 @@
             </div>
 
             <div id="bigerror"></div>
+            <div class="progress" id="spinner">
+              <div class="indeterminate"></div>
+            </div>
           </div>
         </div>
       </fieldset>

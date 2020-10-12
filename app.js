@@ -107,11 +107,11 @@ function fcl() {
   classpage.style.display = "block";
 }
 
-function fen() {
-  var show = $(".display");
-  show.hide();
-  enrollpage.style.display = "block";
-}
+// function fen() {
+//   var show = $(".display");
+//   show.hide();
+//   enrollpage.style.display = "hide";
+// }
 
 function fmy() {
   var show = $(".display");
@@ -318,7 +318,6 @@ function handleReg(event) {
         fho();
       });
   }
-
 }
 
 function validateGender() {
@@ -429,13 +428,13 @@ function validateEnroll(event) {
       .delay(2000)
       .fadeOut(2000);
   } else {
-    alert("Form submitted successfully");
-    // var spinner = document.getElementById("spinner");
-    // spinner.style.display = "block";
-    // window.setTimeout(() => {
-    //   spinner.style.display = "none";
-    //   alert("Form submitted successfully");
-    // }, 2000);
+    var spinner = document.getElementById("spinner");
+    spinner.style.display = "block";
+    window.setTimeout(() => {
+      spinner.style.display = "none";
+      alert("Form submitted successfully");
+    }, 2000);
+    alert("You have enrolled successfully");
   }
 }
 
@@ -486,12 +485,68 @@ function getAllPrograms() {
 
 getAllPrograms();
 
-function getAllClasses() {
-  var day = document.getElementById("days").value;
+function getClassesByProgram() {
+  var program = document.getElementById("program_id").value;
+  if (!program) return alert("Please select a program");
   var place_holder = document.getElementById("showclasses");
-  place_holder.innerHTML = "Loading...";
+  place_holder.innerHTML =
+    '<div class="progress"><div class="indeterminate"></div></div>';
 
+  var endPoint = api + "?action=classesbyprogram&program_id=" + program;
+
+  fetch(endPoint, {
+    method: "GET",
+    mode: "cors",
+    credentials: "include",
+  })
+    .then(function (response) {
+      if (response.status !== 200) {
+        console.log(
+          "Looks like there was a problem. Status Code: " + response.status
+        );
+        place_holder.innerHTML =
+          "Failed to get classes, please try again later";
+      }
+      return response.json();
+    })
+    .then((jsonResponse) => {
+      place_holder.innerHTML = null; // reset content
+      jsonResponse.data.forEach((c) => {
+        let card = document.createElement("div");
+        card.innerHTML = `
+          <div class="col s12 m6">
+            <div class="card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title">Class ${c.class_id}</span>
+                <p>Time: ${c.program_name}</p>
+                <p>Starts: ${c.start_date}</p>
+                <p>Ends: ${c.end_date}</p>
+                <p>Time: ${c.time}</p>
+                <p>Trainer: ${c.trainer_name}</p>
+                <p>Max Students: ${c.max_number}</p>
+                <p>Description: ${c.description}</p>
+              </div>
+              <div class="card-action" onclick=openEnrolForm(${c.class_id})>
+                <a href="#">Book</a>
+              </div>
+            </div>
+          </div>
+        `;
+        place_holder.appendChild(card);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function getClassesByDay() {
+  var day = document.getElementById("days").value;
   if (!day) return alert("Please select a day");
+
+  var place_holder = document.getElementById("showclasses");
+  place_holder.innerHTML =
+    '<div class="progress"><div class="indeterminate"></div></div>';
 
   var endPoint = api + "?action=classesbyday&day=" + day;
 
@@ -526,7 +581,7 @@ function getAllClasses() {
                 <p>Max Students: ${c.max_number}</p>
                 <p>Description: ${c.description}</p>
               </div>
-              <div class="card-action">
+              <div class="card-action" onclick=openEnrolForm(${c.class_id})>
                 <a href="#">Book</a>
               </div>
             </div>
@@ -540,22 +595,31 @@ function getAllClasses() {
     });
 }
 
-function refreshMenu() {
-  if (isLoggedin()) {
-    $("#register").hide();
-    $("#login").hide();
-    $("#logout").show();
-    $("#enroll").show();
-    $("#myclass").show();
-    $("#setting").show();
-  } else {
-    $("#logout").hide();
-    $("#enroll").hide();
-    $("#myclass").hide();
-    $("#setting").hide();
-    $("#login").show();
-    $("#register").show();
-  }
+function openEnrolForm(class_id) {
+  $(".display").hide();
+  $("#enrollpage").show();
+
+  const endPoint = `http://localhost:8888/swimschool/api/api.php?action=classbyid&class_id=${class_id}`;
+
+  fetch(endPoint, {
+    method: "GET",
+    mode: "cors",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      const { program_id, daytime } = res.data;
+      const progOpt = document.querySelector(
+        `#pro option[value='${program_id}']`
+      );
+      progOpt.selected = true;
+      progOpt.disabled = true;
+      document.querySelector("#pro").value = program_id;
+      const dayOpt = document.querySelector(`#cla option[value='${daytime}']`);
+      dayOpt.selected = true;
+      dayOpt.disabled = true;
+      document.querySelector("#cla").value = daytime;
+    });
 }
 
 const sideBarBtn = document.querySelector(".sidenav-trigger");
@@ -580,6 +644,24 @@ function showAlert(type, msg) {
       $(this).remove();
     });
   }, 3000);
+}
+
+function refreshMenu() {
+  if (isLoggedin()) {
+    $("#register").hide();
+    $("#login").hide();
+    $("#logout").show();
+    $("#enroll").show();
+    $("#myclass").show();
+    $("#setting").show();
+  } else {
+    $("#logout").hide();
+    $("#enroll").hide();
+    $("#myclass").hide();
+    $("#setting").hide();
+    $("#login").show();
+    $("#register").show();
+  }
 }
 
 refreshMenu();
