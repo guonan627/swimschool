@@ -316,7 +316,7 @@ try {
             // check the own enrolled class
             case "myenrolledclass":
                 $response = new Response();
-                if ($_SESSION['sessionObj']->isLoggedIn()) { // check the user is logged in or not
+                // if ($_SESSION['sessionObj']->isLoggedIn()) { // check the user is logged in or not
                     if (isset($user_id)) {
                         $result = $db->findEnrollmentsByUser($user_id);
                         if (count($result) == 0) {
@@ -337,11 +337,11 @@ try {
                         $response->setSuccess(false);
                         $response->addMessage("Please provide user ID");
                     }
-                }else {
-                    $response->setHttpStatusCode(401);
-                    $response->setSuccess(false);
-                    $response->addMessage("You are not logged in.");
-                }
+                // }else {
+                //     $response->setHttpStatusCode(401);
+                //     $response->setSuccess(false);
+                //     $response->addMessage("You are not logged in.");
+                // }
                 $response->send();
                 exit;
                 break;
