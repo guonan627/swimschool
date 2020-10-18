@@ -26,22 +26,6 @@ try {
     // set session variables
     $_SESSION['sessionObj']->setIp($_SERVER['REMOTE_ADDR']);
 
-    if ($_SESSION['sessionObj']->getStartTime() == null) {
-        $_SESSION['sessionObj']->setStartTime(time());
-    }
-
-    $counter = $_SESSION['sessionObj']->getRequestCounter();
-    if ($counter == null) {
-        $_SESSION['sessionObj']->setRequestCounter(1);
-        // $firstcall = strtotime(date("Y-m-d h:i:s");
-    } else {
-        $_SESSION['sessionObj']->setRequestCounter($counter + 1);
-    }
-    // $d = $curr - $curr;
-    // if ($d >= 86400) {
-    //        $counter == null;
-    // }
-
     // general rate limiter: 1 request/sec
     if (isset($_SESSION['LAST_CALL'])) {
         $last = strtotime($_SESSION['LAST_CALL']);
@@ -57,13 +41,12 @@ try {
     $_SESSION['LAST_CALL'] = date("Y-m-d h:i:s");
 
     // session rate limiter: 1000 requests/day
-    if ($_SESSION['sessionObj']->oneDayRateLimit() == false) {
+    if ($_SESSION['sessionObj']->oneDayRateLimit() === false) {
         throw new APIException("Daily rate limit exceeded");
         die();
         http_response_code(429);
         return false;
     }
-
     // debug
     // die(json_encode($_SESSION['sessionObj']->oneDayRateLimit()));
 
@@ -97,16 +80,85 @@ try {
             }
         }
 
+        if (isset($data->class_id)) {
+            $class_id = validate($data->class_id, 'primarykey');
+            if ($class_id == false) {
+                throw new APIException("Class ID not valid");
+            }
+        }
+
+        if (isset($data->login_id)) {
+            $login_id = validate($data->login_id, 'primarykey');
+            if ($login_id == false) {
+                throw new APIException("Login ID not valid");
+            }
+        }
+
+        if (isset($data->givenname)) {
+            $givenname = validate($data->givenname, 'alpha');
+            if ($givenname == false) {
+                throw new APIException("Givenname not valid");
+            }
+        }
+
+        if (isset($data->surname)) {
+            $surname = validate($data->surname, 'alpha');
+            if ($surname == false) {
+                throw new APIException("Surname not valid");
+            }
+        }
+
+        if (isset($data->gender)) {
+            $gender = validate($data->gender, 'alpha');
+            if ($gender == false) {
+                throw new APIException("Gender value not valid");
+            }
+        }
+
+        if (isset($data->address)) {
+            $address = validate($data->address, 'alphanumeric_space');
+            if ($address == false) {
+                throw new APIException("Address not valid");
+            }
+        }
+
+        if (isset($data->phone)) {
+            $phone = validate($data->phone, 'integer');
+            if ($phone == false) {
+                throw new APIException("Phone number not valid");
+            }
+        }
+
+        if (isset($data->dob)) {
+            $dob = validate($data->dob, 'alphanumeric_space');
+            if ($dob == false) {
+                throw new APIException("Date of birth format not valid");
+            }
+        }
+
+        if (isset($data->health)) {
+            $health = validate($data->health, 'alphanumeric_space');
+        } else {
+            $health = "";
+        }
+
         if (isset($_GET['program_id'])) {
-            $program_id = validate($_GET['program_id'], 'integer');
+            $program_id = validate($_GET['program_id'], 'primarykey');
             if ($program_id == false) {
                 throw new APIException("Program ID not valid");
             }
         }
 
         if (isset($_GET['class_id'])) {
-            $class_id = validate($_GET['class_id'], 'integer');
+            $class_id = validate($_GET['class_id'], 'primarykey');
             if ($class_id == false) {
+                throw new APIException("class day not valid");
+            }
+        }
+
+        if (isset($_GET['userid'])) {
+            $user_id = validate($_GET['userid'], 'primarykey');
+            if ($user_id == false) {
                 throw new APIException("class day not valid");
             }
         }
@@ -206,7 +258,7 @@ try {
                 if (isset($username) && isset($email) && isset($password)) {
                     $emailList = $db->findAllEmails();
                     if (in_array(array("email" => $email), $emailList)) {
-                        $response->setHttpStatusCode(400);
+                        $response->setHttpStatusCode(409);
                         $response->setSuccess(false);
                         $response->addMessage("Email already exists, please try another one");
                     } else {
@@ -221,6 +273,96 @@ try {
                     $response->setHttpStatusCode(400);
                     $response->setSuccess(false);
                     $response->addMessage("Please provide username, email and password");
+                }
+                $response->send();
+                exit;
+                break;
+
+            case "enroll":
+                $response = new Response();
+                if ($_SESSION['sessionObj']->isLoggedIn()) {
+                    if (isset($login_id) && isset($class_id) && isset($givenname) && isset($surname) && isset($address) && isset($email) && isset($phone) && isset($dob) && isset($health)) {
+                        $enrollments = $db->findEnrollmentsByUser($login_id);
+                        $class = $db->getClassById($class_id);
+                        if ($class["cur_number"] < $class["max_number"]) {
+                            if (count($enrollments) > 0) {
+                                $response->setHttpStatusCode(409);
+                                $response->setSuccess(false);
+                                $response->addMessage("You can only enroll in one class");
+                            } else {
+                                $cur_number = $class["cur_number"] + 1;
+                                $result = $db->enroll($login_id, $class_id, $cur_number, $givenname, $surname, $gender, $address, $email, $phone, $dob, $health);
+                                $response->setHttpStatusCode(201);
+                                $response->setSuccess(true);
+                                $response->addMessage("You have enrolled successfully");
+                                $db->logging("User ID: " . $login_id . ' enrolled class ' . $class_id);
+                                logFile("User ID: " . $login_id . ' enrolled class ' . $class_id);
+                            }
+                        } else {
+                            $response->setHttpStatusCode(400);
+                            $response->setSuccess(false);
+                            $response->addMessage("This class is already full, please try another class");
+                        }
+                    } else {
+                        $response->setHttpStatusCode(400);
+                        $response->setSuccess(false);
+                        $response->addMessage("Missing information");
+                    }
+                } else {
+                    $response->setHttpStatusCode(401);
+                    $response->setSuccess(false);
+                    $response->addMessage("You are not logged in.");
+                }
+
+                $response->send();
+                exit;
+                break;
+
+            case "allenrollments":
+                $response = new Response();
+                $result = $db->getAllEnrollments();
+                $response->setHttpStatusCode(200);
+                $response->setSuccess(true);
+                $response->setData($result);
+                $response->send();
+                $db->logging('Fetched all enrollments');
+                logFile('Fetched all enrollments');
+                exit;
+                break;
+
+            case "myenrollments":
+                $response = new Response();
+                $result = $db->findEnrollmentsByUser($user_id);
+                $response->setHttpStatusCode(200);
+                $response->setSuccess(true);
+                $response->setData($result);
+                $response->send();
+                $db->logging('Fetched all enrollments');
+                logFile('Fetched all enrollments');
+                exit;
+                break;
+
+            case "myenrolledclass":
+                $response = new Response();
+                if (isset($user_id)) {
+                    $result = $db->findEnrollmentsByUser($user_id);
+                    if (count($result) == 0) {
+                        $response->setHttpStatusCode(404);
+                        $response->setSuccess(false);
+                        $response->addMessage("You have not enrolled any class");
+                    } else {
+                        $my_class_id = (int)$result[0]["class_id"];
+                        $my_class = $db->getClassById($my_class_id);
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($my_class);
+                        $db->logging('Fetched all enrollments');
+                        logFile('Fetched all enrollments');
+                    }
+                } else {
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please provide user ID");
                 }
                 $response->send();
                 exit;
@@ -434,31 +576,6 @@ try {
                 $response->send();
                 exit;
                 break;
-
-                // case "viewmyclass":
-                //     $response = new Response();
-                //     if (isset($user_id)) {
-                //         $result = $db->getAllClasses($user_id);
-                //         // die(json_encode($result));
-                //         if ($result == false) {
-                //             $response->setHttpStatusCode(404);
-                //             $response->setSuccess(false);
-                //             $response->addMessage("You have not enrolled any");
-                //         }else {
-                //             $response->setHttpStatusCode(200);
-                //             $response->setSuccess(true);
-                //             $response->setData($result);
-                //             $db->logging('find classes by : ' . $user_id);
-                //             logFile('find classes by : ' . $user_id);
-                //         }
-                //     } else {
-                //         $response->setHttpStatusCode(400);
-                //         $response->setSuccess(false);
-                //         $response->addMessage("");
-                //     }
-                //     $response->send();
-                //     exit;
-                //     break;
 
 
             default:

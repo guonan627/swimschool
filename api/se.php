@@ -64,13 +64,18 @@ class sessionObject
 
     public function oneDayRateLimit()
     {
-        $hours = (time() - $this->_startTime) / 3600;
+        if ($this->_startTime == null) {
+            $this->_startTime = time();
+        }
+        $this->_requestCounter++;
+        $hours = (time() - $this->_startTime / 3600);
         if ($hours < 24 && $this->_requestCounter > 1000) {
             return false;
+        } else if ($hours >= 24){
+            $this->_requestCounter = 0;
         }
         return $this->_requestCounter;
     }
-    // how to refresh 
 
     // set session variables upon successful login
     public function setAuth($incomingAuth)

@@ -31,7 +31,7 @@ USERS: anonymous, admin,student
 
 #### Sign Up:
 
-**POST** _http://localhost/swimschool/api/api.php?action=signup_  
+**POST** _http://localhost:8888/swimschool/api/api.php?action=signup_  
 **Required fields:**
 
 - username
@@ -40,7 +40,7 @@ USERS: anonymous, admin,student
 
 #### Login:
 
-**POST** _http://localhost/swimschool/api/api.php?action=login_  
+**POST** _http://localhost:8888/swimschool/api/api.php?action=login_  
 **Required fields:**
 
 - username
@@ -48,20 +48,20 @@ USERS: anonymous, admin,student
 
 #### Get all programs:
 
-**GET** _http://localhost/swimschool/api/api.php?action=allprograms_  
+**GET** _http://localhost:8888/swimschool/api/api.php?action=allprograms_  
 **Required fields:**
 none
 
 #### Get single program by ID:
 
-**GET** _http://localhost/swimschool/api/api.php?action=findprogram&program_id=1_  
+**GET** _http://localhost:8888/swimschool/api/api.php?action=findprogram&program_id=1_  
 **Required fields:**
 
 - program_id (in URL)
 
 #### Create prorgram:
 
-**POST** _http://localhost/swimschool/api/api.php?action=addprogram_  
+**POST** _http://localhost:8888/swimschool/api/api.php?action=addprogram_  
 **Required fields:**
 
 - program_name
@@ -73,7 +73,7 @@ none
 
 #### Update program:
 
-**PATCH** _http://localhost/swimschool/api/api.php?action=editprogram&program_id=1_  
+**PATCH** _http://localhost:8888/swimschool/api/api.php?action=editprogram&program_id=1_  
 **Required fields:**
 
 - program_id (in URL)
@@ -86,14 +86,14 @@ none
 
 #### Delete program:
 
-**DELETE** _http://localhost/swimschool/api/api.php?action=removeprogram&program_id=11_  
+**DELETE** _http://localhost:8888/swimschool/api/api.php?action=removeprogram&program_id=11_  
 **Required fields:**
 
 - program_id (in URL)
 
 #### Search Classes by Day:
 
-**GET**_http://localhost/swimschool/api/api.php?action=classesbyday&day="Tue"_
+**GET**_http://localhost:8888/swimschool/api/api.php?action=classesbyday&day="Tue"_
 **Required fields:**
 
 - day(in URL)

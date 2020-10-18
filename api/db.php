@@ -94,6 +94,42 @@ class DB
         }
     }
 
+    public function getAllEnrollments()
+    {
+        try {
+            $query = 'SELECT * FROM enrolled';
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($result == false) {
+                return false;
+            } else {
+                return $result;
+            }
+        } catch (PDOException $e) {
+            echo "get enrolments error";
+            die();
+        }
+    }
+
+    public function findEnrollmentsByUser($login_id)
+    {
+        try {
+            $query = 'SELECT * FROM enrolled WHERE login_id = ' . $login_id;
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($result == false) {
+                return array();
+            } else {
+                return $result;
+            }
+        } catch (PDOException $e) {
+            echo "get enrolments error";
+            die();
+        }
+    }
+
     public function findAllEmails()
     {
         try {
@@ -272,11 +308,11 @@ class DB
         }
     }
 
-    //Search Class by ID
+    //Get Class by ID
     public function getClassById($class_id)
     {
         try {
-            $query = 'SELECT * FROM class WHERE class.class_id = "' . $class_id . '"';
+            $query = 'SELECT * FROM class INNER JOIN program ON class.program_id = program.program_id WHERE class.class_id = "' . $class_id . '"';
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -288,6 +324,38 @@ class DB
         } catch (PDOException $e) {
             echo $e;
             die();
+        }
+    }
+
+    function enroll($login_id, $class_id, $cur_number, $givenname, $surname, $gender, $address, $email, $phone, $dob, $health)
+    {
+        try {
+            $this->conn->beginTransaction();
+            //Step 1: create student details in enrolled table
+            $newstudent = "INSERT INTO enrolled(name, surname, gender, address, email, phone, dob, health, login_id, class_id) VALUES (:name, :surname, :gender, :address, :email, :phone, :dob, :health, :login_id, :class_id)";
+            $stmt = $this->conn->prepare($newstudent);
+            $stmt->bindValue(':name', $givenname);
+            $stmt->bindValue(':surname', $surname);
+            $stmt->bindValue(':gender', $gender);
+            $stmt->bindValue(':address', $address);
+            $stmt->bindValue(':email', $email);
+            $stmt->bindValue(':phone', $phone);
+            $stmt->bindValue(':dob', $dob);
+            $stmt->bindValue(':health', $health);
+            $stmt->bindValue(':login_id', $login_id);
+            $stmt->bindValue(':class_id', $class_id);
+            $stmt->execute();
+            //Step 2: upgrade class status
+            $updatedclass = "UPDATE class SET cur_number = :cur_number WHERE class_id = :class_id";
+            $stmt = $this->conn->prepare($updatedclass);
+            $stmt->bindValue(':class_id', $class_id);
+            $stmt->bindValue(':cur_number', $cur_number);
+            $stmt->execute();
+            //Step 3: commit
+            $this->conn->commit();
+        } catch (PDOException $ex) {
+            $this->conn->rollBack();
+            throw $ex;
         }
     }
 

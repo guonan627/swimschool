@@ -41,21 +41,17 @@
           </li>
           <li class="navshow" id="classes" onclick="fcl()"><a class="waves-effect" href="#classpage"><i
                 class="material-icons">filter_center_focus</i>Search and Enroll</a></li>
-          <!-- <li class="navshow" id="enroll" onclick="fen()"><a class="waves-effect" href="#enrollpage"><i
-                class="material-icons">filter_center_focus</i>Enroll</a>
-          </li> -->
           <li class="navshow" id="myclass" onclick="fmy()"><a class="waves-effect" href="#myclasspage"><i
                 class="material-icons">class</i>My
               Class</a></li>
-          <li class="navshow" id="contact" onclick="fco()"><a class="waves-effect" href="#contactpage"><i
+          <!-- <li class="navshow" id="contact" onclick="fco()"><a class="waves-effect" href="#contactpage"><i
                 class="material-icons">contact_phone</i>Contact</a>
-          </li>
+          </li> -->
           <li>
             <div class="divider"></div>
           </li>
           <li class="navshow" id="setting" onclick="fse()"><a class="waves-effect" href="#settingpage"><i
-                class="material-icons">settings</i>Account
-              Setting</a></li>
+                class="material-icons">settings</i>Account Setting</a></li>
         </ul>
         <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons"
             style="padding: 10px; transform: scale(2);">menu</i></a>
@@ -166,10 +162,10 @@
                 <label for="psw1b">Password</label>
               </div>
             </div>
-            <!-- remeber me -->
+            <!-- remember me -->
             <label>
-              <input type="checkbox" class="filled-in" checked="checked" />
-              <span>Remeber Me</span>
+              <input type="checkbox" class="filled-in" id="rm" checked="checked" />
+              <span>Remember Me</span>
             </label>
 
             <button class="btn waves-effect waves-light light-blue" type="submit" name="action"
@@ -224,7 +220,7 @@
                   a lifelong love of swimming.</p>
               </div>
               <div class="card-action">
-                <a href="#programpage" onclick="fpr()">read more</a>
+                <a href="#programpage" onclick="fpr()">Read More</a>
               </div>
             </div>
           </div>
@@ -232,13 +228,15 @@
             <div class="card">
               <div class="card-image">
                 <img src="images/3.jpg">
-                <span class="card-title">Contact</span>
+                <span class="card-title">Find Us</span>
               </div>
               <div class="card-content">
-                <p>We are open from Monday to Sunday.</p>
+                <p>Open Time: 9:00am to 6:00pm,Monday to Saturday.</p>
+                <p>Address: 2/218 Padstow Rd, Eight Mile Plains QLD 4113</p>
+                <p>Contact: 0452889967</p>
               </div>
               <div class="card-action">
-                <a href="#contactpage" onclick="fco()">find us</a>
+                <a href="#contactpage" onclick="fcl()">Search Classes and Enroll</a>
               </div>
             </div>
           </div>
@@ -251,62 +249,6 @@
     <!-- program intro page-->
     <div class="display" id="programpage">
       <div id="programs"></div>
-      <div class="row">
-        <div class="col s12">
-          <div class="card">
-            <div class="card-image">
-              <img src="images/1.jpg">
-              <span class="card-title">Parent & Baby</span>
-            </div>
-            <div class="card-content">
-              <h5>6 Months to 3 Years Old</h5>
-              <p>Parent & Baby is focused on developing trust between parent and child in the water, while
-                re-enforcing safety skills in and around the water</p>
-              <h6>requirement:</h6>
-              <p>none</p>
-            </div>
-            <div class="card-action">
-              <a href="#enrollpage" onclick="fen()">enroll now</a>
-            </div>
-          </div>
-        </div>
-        <div class="col s12">
-          <div class="card">
-            <div class="card-image">
-              <img src="images/1.jpg">
-              <span class="card-title">Parent & Baby</span>
-            </div>
-            <div class="card-content">
-              <h5>6 Months to 3 Years Old</h5>
-              <p>Parent & Baby is focused on developing trust between parent and child in the water, while
-                re-enforcing safety skills in and around the water</p>
-              <h6>requirement:</h6>
-              <p>none</p>
-            </div>
-            <div class="card-action">
-              <a href="#enrollpage" onclick="fen()">enroll now</a>
-            </div>
-          </div>
-        </div>
-        <div class="col s12">
-          <div class="card">
-            <div class="card-image">
-              <img src="images/1.jpg">
-              <span class="card-title">Parent & Baby</span>
-            </div>
-            <div class="card-content">
-              <h5>6 Months to 3 Years Old</h5>
-              <p>Parent & Baby is focused on developing trust between parent and child in the water, while
-                re-enforcing safety skills in and around the water</p>
-              <h6>requirement:</h6>
-              <p>none</p>
-            </div>
-            <div class="card-action">
-              <a href="#enrollpage" onclick="fen()">enroll now</a>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- all classes page-->
@@ -317,7 +259,7 @@
         <div class="input-field col s8">
           <select id="program_id" name="program_id">
             <option value="" disabled selected>Choose a program</option>
-            <option value="1">Parent And Baby</option>
+            <option value="1">Parent and Baby</option>
             <option value="2">Leap Frog</option>
             <option value="3">Safe Swimming</option>
             <option value="4">Swim Perfect</option>
@@ -356,6 +298,34 @@
       <h5>Enroll a Class</h5>
       <fieldset class="section container">
         <div class="row">
+
+          <!-- program  -->
+          <div class="input-field col s12">
+            <label for="program1">Selected Program</label>
+            <i class="material-icons prefix">pool</i>
+            <input type="search" placeholder="Program" class="form-input" id="program1" readonly></input>
+          </div>
+          <!-- date -->
+          <div class="input-field col s12">
+            <label for="day1">Time</label>
+            <i class="material-icons prefix">event</i>
+            <input type="search" placeholder="Date" class="form-input" id="day1" readonly></input>
+          </div>
+          <!-- trainer -->
+          <div class="input-field col s12">
+            <label for="trainer1">Trainer</label>
+            <i class="material-icons prefix">face</i>
+            <input type="search" placeholder="Trainer" class="form-input" id="trainer1" readonly></input>
+          </div>
+          <!-- price  -->
+          <div class="input-field col s12">
+            <label for="price1">Price</label>
+            <i class="material-icons prefix">attach_money</i>
+            <input type="search" placeholder="Price" class="form-input" id="price1" readonly></input>
+          </div>
+          <!-- class -->
+          <input id="classId" hidden></input>
+
           <div class="col s12">
             <!-- first name -->
             <div class="row">
@@ -386,19 +356,19 @@
               <i class="material-icons">wc</i>
               <p>
                 <label>
-                  <input class="with-gap gender" name="group" type="radio" />
+                  <input class="with-gap gender" value="Male" name="group" type="radio" />
                   <span>male</span>
                 </label>
               </p>
               <p>
                 <label>
-                  <input class="with-gap gender" name="group" type="radio" />
+                  <input class="with-gap gender" value="Female" name="group" type="radio" />
                   <span>female</span>
                 </label>
               </p>
               <p>
                 <label>
-                  <input class="with-gap gender" name="group" type="radio" />
+                  <input class="with-gap gender" value="Other" name="group" type="radio" />
                   <span>other</span>
                 </label>
               </p>
@@ -420,10 +390,19 @@
             <div class="row">
               <div class="input-field col s12">
                 <i class="material-icons prefix">phone</i>
-                <input class="validate" id="p2" type="text" pattern="[0-9{6}" minlength="6" maxlength="20" title="phone"
-                  name="phone" required />
+                <input class="validate" id="p2" type="text" minlength="6" maxlength="20" title="phone" name="phone"
+                  required />
                 <label for="p2">Phone</label>
                 <div class="error" id="errorp2">Please enter a valid phone</div>
+              </div>
+            </div>
+            <!-- email -->
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="material-icons prefix">email</i>
+                <input class="validate" id="email2" type="email" title="email" name="email" required />
+                <label for="email2">email</label>
+                <div class="error" id="erroremail2">Please enter a valid email</div>
               </div>
             </div>
             <!-- address -->
@@ -442,40 +421,14 @@
               </div>
             </div>
 
-            <!-- program  -->
-            <div class="input-field col s12">
-              <i class="material-icons prefix">event</i>
-              <select id="pro" required>
-                <option value="" disabled selected>Choose a program</option>
-                <option value="1">Parent And Baby</option>
-                <option value="2">Leap Frog</option>
-                <option value="3">Safe Swimming</option>
-                <option value="4">Swim Perfect</option>
-                <option value="5">Pre-Team</option>
-              </select>
-              <div class="error" id="errorpro">Please choose a program</div>
-            </div>
-            <!-- class -->
-            <div class="input-field col s12">
-              <i class="material-icons prefix">access_alarms</i>
-              <select id="cla" required>
-                <option value="" disabled selected>Choose a day</option>
-                <option value="Mon">Monday</option>
-                <option value="Tue">Tuesday</option>
-                <option value="Wed">Wednesday</option>
-                <option value="Thu">Thursday</option>
-                <option value="Fri">Friday</option>
-                <option value="Sat">Saturday</option>
-              </select>
-              <div class="error" id="errorcla">Please choose a class time</div>
-            </div>
             <!-- special health conditions -->
             <div class="col s12">
               <div class="row">
                 <div class="input-field col s12">
                   <i class="material-icons prefix">mode_edit</i>
-                  <textarea id="textarea2" class="materialize-textarea" data-length="200"></textarea>
-                  <label for="textarea2">Special Health Conditions</label>
+                  <textarea id="health" class="materialize-textarea" data-length="200"></textarea>
+                  <label for="health">Enter special health conditions or "no"</label>
+                  <div class="error" id="errorhealth">health conditions cannot be empty.</div>
                 </div>
               </div>
             </div>
@@ -524,9 +477,6 @@
             </div>
 
             <div id="bigerror"></div>
-            <div class="progress" id="spinner">
-              <div class="indeterminate"></div>
-            </div>
           </div>
         </div>
       </fieldset>
@@ -535,26 +485,12 @@
 
     <!-- my class page-->
     <div class="display" id="myclasspage">
-      <div class="row">
-        <div class="col s12 m6">
-          <div class="card blue-grey darken-1">
-            <div class="card-content white-text">
-              <span class="card-title">My Class</span>
-              <p>Program: Baby and Parent</p>
-              <p>Class time: Monday 10am-10.30am</p>
-              <p>Trainer: Dow Snow</p>
-            </div>
-            <div class="card-action">
-              <a href="#">Student List</a>
-              <a href="#">Check Photos</a>
-            </div>
-          </div>
-        </div>
+      <div id="showmyclass" class="row">
       </div>
     </div>
 
     <!-- contact page -->
-    <div class="display" id="contactpage">
+    <!-- <div class="display" id="contactpage"> -->
 
     </div>
 
@@ -566,60 +502,11 @@
         <div class="switch">
           <label>
             On
-            <input type="checkbox" id="bkndcheck" onchange="switchbg(this)">
+            <input type="checkbox" id="themeSwitch" onchange="switchbg(this)">
             <span class="lever"></span>
             Off
           </label>
         </div>
-      </div>
-      <!-- change password -->
-      <div class="row">
-        <h6>Change Your Password:</h6>
-        <div class="row">
-          <div class="col s12">
-            <!-- password1 -->
-            <div class="row">
-              <div class="input-field col s12">
-                <i class="material-icons prefix">vpn_key</i>
-                <input id="psw1" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                  minlength="8" required>
-                <label for="password">New Password</label>
-                <div class="error" id="errorpsw1">
-                  <p>Password must contain the following:</p>
-                  <p>A <b>lowercase</b> letter</p>
-                  <p>A <b>capital (uppercase)</b> letter</p>
-                  <p>A <b>number</b></p>
-                  <p>Minimum <b>8 characters</b></p>
-                </div>
-              </div>
-            </div>
-            <!-- password2 -->
-            <div class="row">
-              <div class="input-field col s12">
-                <i class="material-icons prefix">vpn_key</i>
-                <input id="psw2" type="password" class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                  minlength="8" required>
-                <label for="password">New Password Again</label>
-                <div class="error" id="errorpsw2">
-                  <p>Password must contain the following:</p>
-                  <p class="invalid">A <b>lowercase</b> letter</p>
-                  <p class="invalid">A <b>capital (uppercase)</b> letter</p>
-                  <p class="invalid">A <b>number</b></p>
-                  <p class="invalid">Minimum <b>8 characters</b></p>
-                </div>
-                <div class="error" id="samepsw">
-                  <p>Two passwords are not same.</p>
-                </div>
-              </div>
-              <button class="btn light-blue" onclick="revealPasswords()" type="button" style="margin-left: 20px;"><i
-                  class="material-icons">remove_red_eye</i></button>
-            </div>
-            <button class="btn blue" type="submit" name="action" onclick="validateP(event)">save
-            </button>
-          </div>
-        </div>
-
-
       </div>
     </div>
   </section>
@@ -646,7 +533,7 @@
 </script>
 <script>
   $(document).ready(function () {
-    $('.datepicker').datepicker();
+    $('.datepicker').datepicker({ format: 'yyyy-mm-dd' });
   });
 </script>
 <script>

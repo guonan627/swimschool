@@ -1,10 +1,8 @@
-// $("html,body").animate(
-//   {
-//     scrollTop: 0,
-//     screenLeft: 0,
-//   },
-//   400
-// );
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", function () {
+//     navigator.serviceWorker.register("service-worker.js");
+//   });
+// }
 
 var api = "http://localhost:8888/swimschool/api/api.php";
 
@@ -48,15 +46,21 @@ var api = "http://localhost:8888/swimschool/api/api.php";
 // address finder api end
 
 window.onload = function () {
-  // 1. pure js method
-  // var show = document.getElementsByClassName("display");
-  // for (let i = 0; i < show.length; i++) {
-  //   show[i].style.display = "none";
-  // }
-  // 2. jquery method
-  var show = $(".display");
-  show.hide();
-  homepage.style.display = "block";
+  // clear service-worker cache
+  caches.keys().then(function (names) {
+    for (let name of names) caches.delete(name);
+  });
+
+  // get last viewed page
+  var lastViewedPage = localStorage.getItem("lastViewedPage");
+  if (lastViewedPage) {
+    $(".display").hide();
+    var page = document.getElementById(lastViewedPage);
+    page.style.display = "block";
+  } else {
+    // show home page
+    fho();
+  }
 
   var logoutshow = $("#logout");
   logoutshow.hide();
@@ -67,7 +71,7 @@ window.onload = function () {
   var settingshow = $("#setting");
   settingshow.hide();
 
-  var theme = localStorage.getItem("bg");
+  var theme = localStorage.getItem("background colour");
   if (theme === "dark") {
     document.body.style.backgroundColor = "rgba(50,50,50)";
     document.body.style.color = "grey";
@@ -81,59 +85,70 @@ function fre() {
   var show = $(".display");
   show.hide();
   registerpage.style.display = "block";
+  localStorage.setItem("lastViewedPage", "registerpage");
 }
 
 function flogin() {
   var show = $(".display");
   show.hide();
   loginpage.style.display = "block";
+  localStorage.setItem("lastViewedPage", "loginpage");
 }
 
 function fho() {
   var show = $(".display");
   show.hide();
   homepage.style.display = "block";
+  localStorage.setItem("lastViewedPage", "homepage");
 }
 
 function fpr() {
   var show = $(".display");
   show.hide();
   programpage.style.display = "block";
+  getAllPrograms();
+  localStorage.setItem("lastViewedPage", "programpage");
 }
 
 function fcl() {
   var show = $(".display");
   show.hide();
   classpage.style.display = "block";
+  localStorage.setItem("lastViewedPage", "classpage");
 }
 
-// function fen() {
-//   var show = $(".display");
-//   show.hide();
-//   enrollpage.style.display = "hide";
-// }
+function fen() {
+  var show = $(".display");
+  show.hide();
+  enrollpage.style.display = "block";
+  localStorage.setItem("lastViewedPage", "enrollpage");
+}
 
 function fmy() {
   var show = $(".display");
   show.hide();
   myclasspage.style.display = "block";
+  getMyClass();
+  localStorage.setItem("lastViewedPage", "myclasspage");
 }
 
-function fco() {
-  var show = $(".display");
-  show.hide();
-  contactpage.style.display = "block";
-}
+// function fco() {
+//   var show = $(".display");
+//   show.hide();
+//   contactpage.style.display = "block";
+//   localStorage.setItem("lastViewedPage", "contactpage");
+// }
 
 function fse() {
   var show = $(".display");
   show.hide();
   settingpage.style.display = "block";
+  localStorage.setItem("lastViewedPage", "settingpage");
 }
 
 function revealPasswords() {
-  var psw1 = document.getElementById("psw1");
-  var psw2 = document.getElementById("psw2");
+  var psw1 = document.getElementById("psw1a");
+  var psw2 = document.getElementById("psw2a");
   if (psw1.getAttribute("type") === "text") {
     psw1.setAttribute("type", "password");
     psw2.setAttribute("type", "password");
@@ -144,8 +159,8 @@ function revealPasswords() {
 }
 
 function passEquality() {
-  var psw1 = document.getElementById("psw1");
-  var psw2 = document.getElementById("psw2");
+  var psw1 = document.getElementById("psw1a");
+  var psw2 = document.getElementById("psw2a");
   if (psw1.value.length > 0 && psw2.value.length > 0) {
     if (psw1.value === psw2.value) {
       psw1.setCustomValidity("");
@@ -184,7 +199,7 @@ function submitLogin(event) {
       password: password.value,
     };
     fetch(api + "?action=login", {
-      method: "post",
+      method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json", //all echo statements are json_encode
@@ -197,6 +212,7 @@ function submitLogin(event) {
           showAlert("error", "Incorrect username or password");
           localStorage.removeItem("token");
           localStorage.removeItem("userid");
+          localStorage.removeItem("username");
           return;
         }
         if (res.statusCode === 200) {
@@ -206,6 +222,13 @@ function submitLogin(event) {
           );
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("userid", res.data.userid);
+          localStorage.setItem("username", res.data.username);
+          // var rm = document.getElementById("rm");
+          // if (rm.checked) {
+          //   localStorage.setItem("token", res.data.token);
+          //   localStorage.setItem("userid", res.data.userid);
+          //   localStorage.setItem("username", res.data.username);
+          // }
           refreshMenu();
           fho();
         }
@@ -238,6 +261,8 @@ function logout() {
       homepage.style.display = "block";
       localStorage.removeItem("token");
       localStorage.removeItem("userid");
+      localStorage.removeItem("username");
+      localStorage.removeItem("password");
       refreshMenu();
       showAlert("success", "You have logged out");
     })
@@ -245,8 +270,6 @@ function logout() {
       console.log(err.message);
     });
 }
-
-// function websocket
 
 function handleReg(event) {
   event.preventDefault(); // the default action that belongs to the event will not occur.
@@ -304,8 +327,9 @@ function handleReg(event) {
       email: email.value,
       password: psw1.value,
     };
+
     fetch(api + "?action=signup", {
-      method: "post",
+      method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json", //all echo statements are json_encode
@@ -354,9 +378,9 @@ function validateEnroll(event) {
   event.preventDefault();
   var valid = true;
   // first name
-  var ln = document.getElementById("fn");
+  var fn = document.getElementById("fn");
   var errorsn = document.getElementById("errorfn");
-  if (!ln.checkValidity()) {
+  if (!fn.checkValidity()) {
     errorsn.style.display = "block";
     valid = false;
   } else {
@@ -385,7 +409,7 @@ function validateEnroll(event) {
     errordob.style.display = "none";
   }
   // Address
-  var ad = document.getElementById("ad");
+  var ad = document.getElementById("addrs_1");
   var errorad = document.getElementById("errorad");
   if (!ad.checkValidity()) {
     errorad.style.display = "block";
@@ -402,24 +426,25 @@ function validateEnroll(event) {
   } else {
     errorp2.style.display = "none";
   }
-  // program
-  var pro = document.getElementById("pro");
-  var errorpro = document.getElementById("errorpro");
-  if (!pro.checkValidity()) {
-    errorpro.style.display = "block";
+  // Email
+  var email2 = document.getElementById("email2");
+  var erroremail2 = document.getElementById("erroremail2");
+  if (!email2.checkValidity()) {
+    erroremail2.style.display = "block";
     valid = false;
   } else {
-    errorpro.style.display = "none";
+    erroremail2.style.display = "none";
   }
-  // class
-  var cla = document.getElementById("cla");
-  var errorcla = document.getElementById("errorcla");
-  if (!cla.checkValidity()) {
-    errorcla.style.display = "block";
+  // Health
+  var health = document.getElementById("health");
+  var errorhealth = document.getElementById("errorhealth");
+  if (!health.checkValidity()) {
+    errorhealth.style.display = "block";
     valid = false;
   } else {
-    errorcla.style.display = "none";
+    errorhealth.style.display = "none";
   }
+
   // handle form submission
   if (valid === false) {
     $("#bigerror")
@@ -428,13 +453,38 @@ function validateEnroll(event) {
       .delay(2000)
       .fadeOut(2000);
   } else {
-    var spinner = document.getElementById("spinner");
-    spinner.style.display = "block";
-    window.setTimeout(() => {
-      spinner.style.display = "none";
-      alert("Form submitted successfully");
-    }, 2000);
-    alert("You have enrolled successfully");
+    const data = {
+      login_id: localStorage.getItem("userid"),
+      class_id: document.getElementById("classId").value,
+      givenname: fn.value,
+      surname: ln.value,
+      gender: document.querySelector('input[name="group"]:checked').value,
+      address: ad.value,
+      email: email2.value,
+      phone: p2.value,
+      dob: dob.value,
+      health: health.value,
+    };
+    fetch(api + "?action=enroll", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // only logged in users can enroll
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((jsonRes) => {
+        if (jsonRes.success) {
+          showAlert("success", `${jsonRes.messages[0]}`);
+          refreshMenu();
+          fho();
+        } else {
+          showAlert("error", `${jsonRes.messages[0]}`);
+        }
+      })
+      .catch((err) => console.log(err));
   }
 }
 
@@ -442,11 +492,11 @@ function switchbg(checkIT) {
   if (checkIT.checked == true) {
     document.body.style.backgroundColor = "rgba(50,50,50)";
     document.body.style.color = "grey";
-    localStorage.setItem("bg", "dark");
+    localStorage.setItem("background colour", "dark");
   } else {
     document.body.style.backgroundColor = "lightblue";
     document.body.style.color = "black";
-    localStorage.setItem("bg", "bright");
+    localStorage.setItem("background colour", "bright");
   }
 }
 
@@ -463,27 +513,37 @@ function getAllPrograms() {
       }
       return response.json();
     })
-    .then((jsonResponse) => {
+    .then((jsonRes) => {
       var place_holder = document.getElementById("programs");
-      place_holder.innerHTML = null;
-      jsonResponse.data.map((program) => {
-        let row = document.createElement("div");
-        row.innerHTML = `
-          <div class="row">
-            <div class="title">Program: ${program.program_name}</div>
-            <div class="price">Price: ${program.price}</div>
-            <div class="duration">Duration: ${program.duration}</div>
+      place_holder.innerHTML = null; // reset content
+      jsonRes.data.forEach((program) => {
+        let card = document.createElement("div");
+        card.innerHTML = `
+          <div class="col s12">
+            <div class="card">
+              <div class="card-image">
+                <img src="images/1.jpg">
+                <span class="card-title">${program.program_name}</span>
+              </div>
+              <div class="card-content">
+                <h5>Program Level:${program.program_level}</h5>
+                <h5>Program Summary:</h5>
+                <h6>${program.description}</h6>
+                <h5>Time: ${program.duration}</h5>
+                <h5>Price: ${program.price}</h5>
+                <h5>Prerequisites:</h5>
+                <h6>${program.prerequisites}</h6>
+              </div>
+            </div>
           </div>
         `;
-        place_holder.appendChild(row);
+        place_holder.appendChild(card);
       });
     })
     .catch((err) => {
       console.log(err);
     });
 }
-
-getAllPrograms();
 
 function getClassesByProgram() {
   var program = document.getElementById("program_id").value;
@@ -509,25 +569,31 @@ function getClassesByProgram() {
       }
       return response.json();
     })
-    .then((jsonResponse) => {
+    .then((jsonRes) => {
+      if (jsonRes.Error)
+        return showAlert(
+          "error",
+          "Rate limit exceeded, please try again later"
+        );
       place_holder.innerHTML = null; // reset content
-      jsonResponse.data.forEach((c) => {
+      jsonRes.data.forEach((c) => {
         let card = document.createElement("div");
         card.innerHTML = `
           <div class="col s12 m6">
             <div class="card blue-grey darken-1">
               <div class="card-content white-text">
                 <span class="card-title">Class ${c.class_id}</span>
-                <p>Time: ${c.program_name}</p>
+                <p>Program: ${c.program_name}</p>
                 <p>Starts: ${c.start_date}</p>
                 <p>Ends: ${c.end_date}</p>
                 <p>Time: ${c.time}</p>
                 <p>Trainer: ${c.trainer_name}</p>
-                <p>Max Students: ${c.max_number}</p>
+                <p>Max Student Number: ${c.max_number}</p>
+                <p>Current Student Number: ${c.cur_number}</p>
                 <p>Description: ${c.description}</p>
               </div>
-              <div class="card-action" onclick=openEnrolForm(${c.class_id})>
-                <a href="#">Book</a>
+              <div class="card-action">
+                <a href="#" onclick=openEnrolForm(${c.class_id})>Enroll Now</a>
               </div>
             </div>
           </div>
@@ -565,9 +631,14 @@ function getClassesByDay() {
       }
       return response.json();
     })
-    .then((jsonResponse) => {
+    .then((jsonRes) => {
+      if (jsonRes.Error)
+        return showAlert(
+          "error",
+          "Rate limit exceeded, please try again later"
+        );
       place_holder.innerHTML = null; // reset content
-      jsonResponse.data.forEach((c) => {
+      jsonRes.data.forEach((c) => {
         let card = document.createElement("div");
         card.innerHTML = `
           <div class="col s12 m6">
@@ -578,11 +649,12 @@ function getClassesByDay() {
                 <p>Ends: ${c.end_date}</p>
                 <p>Time: ${c.time}</p>
                 <p>Trainer: ${c.trainer_name}</p>
-                <p>Max Students: ${c.max_number}</p>
+                <p>Max Student Number: ${c.max_number}</p>
+                <p>Current Student Number: ${c.cur_number}</p>
                 <p>Description: ${c.description}</p>
               </div>
-              <div class="card-action" onclick=openEnrolForm(${c.class_id})>
-                <a href="#">Book</a>
+              <div class="card-action">
+                <a href="#" onclick=openEnrolForm(${c.class_id})>Enroll Now</a>
               </div>
             </div>
           </div>
@@ -595,30 +667,83 @@ function getClassesByDay() {
     });
 }
 
-function openEnrolForm(class_id) {
-  $(".display").hide();
-  $("#enrollpage").show();
+function getMyClass() {
+  if (!isLoggedin()) return showAlert("error", "You are not logged in!");
 
-  const endPoint = `http://localhost:8888/swimschool/api/api.php?action=classbyid&class_id=${class_id}`;
+  var userId = localStorage.getItem("userid");
+
+  var place_holder = document.getElementById("showmyclass");
+  place_holder.innerHTML =
+    '<div class="progress"><div class="indeterminate"></div></div>';
+
+  var endPoint = api + "?action=myenrolledclass&userid=" + userId;
 
   fetch(endPoint, {
     method: "GET",
     mode: "cors",
     credentials: "include",
   })
+    .then(function (res) {
+      if (res.status == 404) {
+        showAlert("error", "You don't have any enrolled class");
+        place_holder.innerHTML = "No class found";
+      }
+      return res.json();
+    })
+    .then((jsonRes) => {
+      if (jsonRes.Error) return showAlert("error", "Ratelimit exceeded");
+      const c = jsonRes.data;
+      place_holder.innerHTML = null; // reset content
+      place_holder.innerHTML = `
+      <div class="col s12 m6">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">${c.program_name}</span>
+            <p>Starts: ${c.start_date}</p>
+            <p>Ends: ${c.end_date}</p>
+            <p>Time: ${c.time}</p>
+            <p>Trainer: ${c.trainer_name}</p>
+            <p>Max Student Number: ${c.max_number}</p>
+            <p>Current Student Number: ${c.cur_number}</p>
+          </div>
+          <div class="card-action">
+            <a href="#">View</a>
+          </div>
+        </div>
+      </div>
+    `;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function openEnrolForm(class_id) {
+  const endPoint = `${api}?action=classbyid&class_id=${class_id}`;
+  fetch(endPoint, {
+    method: "GET",
+    mode: "cors",
+    credentials: "include",
+  })
     .then((res) => res.json())
-    .then((res) => {
-      const { program_id, daytime } = res.data;
-      const progOpt = document.querySelector(
-        `#pro option[value='${program_id}']`
-      );
-      progOpt.selected = true;
-      progOpt.disabled = true;
-      document.querySelector("#pro").value = program_id;
-      const dayOpt = document.querySelector(`#cla option[value='${daytime}']`);
-      dayOpt.selected = true;
-      dayOpt.disabled = true;
-      document.querySelector("#cla").value = daytime;
+    .then((jsonRes) => {
+      if (jsonRes.Error)
+        return showAlert(
+          "error",
+          "Rate limit exceeded, please try again later"
+        );
+      $(".display").hide();
+      $("#enrollpage").show();
+      // populate enrolment form
+      document.querySelector("#price1").value = jsonRes.data.price;
+      document.querySelector("#program1").value = jsonRes.data.program_name;
+      document.querySelector("#day1").value = jsonRes.data.time;
+      document.querySelector("#trainer1").value = jsonRes.data.trainer_name;
+      // hidden field: class ID
+      document.querySelector("#classId").value = jsonRes.data.class_id;
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 
