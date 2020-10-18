@@ -27,7 +27,7 @@ USERS: anonymous, admin,student
 - A web app is developed using a client-side framework (materialized) to speed the development process with mobile components.
 - Administration panel will be developed using React.
 
-## API
+## API setting
 
 #### Sign Up:
 
@@ -46,13 +46,19 @@ USERS: anonymous, admin,student
 - username
 - password
 
+#### Logout:
+**POST** _http://localhost:8888/swimschool/api/api.php?action=logout_  
+**Required fields:**
+
+none
+
 #### Get all programs:
 
 **GET** _http://localhost:8888/swimschool/api/api.php?action=allprograms_  
 **Required fields:**
 none
 
-#### Get single program by ID:
+#### Get single program by programID:
 
 **GET** _http://localhost:8888/swimschool/api/api.php?action=findprogram&program_id=1_  
 **Required fields:**
@@ -93,23 +99,54 @@ none
 
 #### Search Classes by Day:
 
-**GET**_http://localhost:8888/swimschool/api/api.php?action=classesbyday&day="Tue"_
+**GET**http://localhost:8888/swimschool/api/api.php?action=classesbyday&day=Tue
 **Required fields:**
 
 - day(in URL)
 
+#### Search Classes by Program Name:
+
+**GET**http://localhost:8888/swimschool/api/api.php?action=classesbyprogram&program_id=3
+**Required fields:**
+
+- program_id(in URL)
+
+#### Enroll:
+
+**POST** _http://localhost:8888/swimschool/api/api.php?action=enroll_  
+**Required fields:**
+
+- login_id
+- class_id
+- class_time
+- givenname
+- surname
+- address
+- email
+- phone
+- dob
+- health
+
+#### check my enrolled class by userid
+
+**GET**http://localhost:8888/swimschool/api/api.php?action=myenrolledclass&userid=19
+**Required fields:**
+
+- userid(in URL)
+
 ## Security
 
-- Logging feature that accounts for every request with IP, browser, timestamp and action
-- Rate limit Web Service to one request per second per user session
+- Logging feature that accounts for every request with IP, browser, timestamp and action and record them in the database and txt document
+- Rate limit to control one request per second per user session
 - Limit per session request to 1,000 in a 24hour period
 
 ## Current Status
 
-- Frontend - complete the prototype and fetched some information from database
-- Backend - complete some of Web Services
+- Frontend - complete
+- Backend - complete all the frontend required APIs and some admin panel required APIs
 - Admin panel - Not Started
 
-## Major Priorities
+## What to Do Next for improvement
+- add 
 
-## Long-term Priorities
+

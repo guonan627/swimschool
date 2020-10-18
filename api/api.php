@@ -41,7 +41,7 @@ try {
     $_SESSION['LAST_CALL'] = date("Y-m-d h:i:s");
 
     // session rate limiter: 1000 requests/day
-    if ($_SESSION['sessionObj']->oneDayRateLimit() === false) {
+    if ($_SESSION['sessionObj']->oneDayRateLimit() === false) { //calculate in se.php
         throw new APIException("Daily rate limit exceeded");
         die();
         http_response_code(429);
@@ -50,161 +50,138 @@ try {
     // debug
     // die(json_encode($_SESSION['sessionObj']->oneDayRateLimit()));
 
+    
     if (isset($_GET['action'])) {
         $validated_action = validate($_GET['action'], 'alpha');
         if ($validated_action == false) {
             throw new APIException("Action code is not valid");
         }
-
-
-        // VALIDATORS
-
+        // Validate all incoming variables from frontend
         if (isset($data->email)) {
             $email = filter_var($data->email, FILTER_VALIDATE_EMAIL);
             if ($email == false) {
                 throw new APIException("Email not valid");
             }
         }
-
         if (isset($data->username)) {
             $username = validate($data->username, 'alphanumeric');
             if ($username == false) {
                 throw new APIException("Username not valid");
             }
         }
-
         if (isset($data->password)) {
             $password = validate($data->password, 'alphanumeric');
             if ($password == false) {
                 throw new APIException("Password not valid");
             }
         }
-
         if (isset($data->class_id)) {
             $class_id = validate($data->class_id, 'primarykey');
             if ($class_id == false) {
                 throw new APIException("Class ID not valid");
             }
         }
-
         if (isset($data->login_id)) {
             $login_id = validate($data->login_id, 'primarykey');
             if ($login_id == false) {
                 throw new APIException("Login ID not valid");
             }
         }
-
         if (isset($data->givenname)) {
             $givenname = validate($data->givenname, 'alpha');
             if ($givenname == false) {
                 throw new APIException("Givenname not valid");
             }
         }
-
         if (isset($data->surname)) {
             $surname = validate($data->surname, 'alpha');
             if ($surname == false) {
                 throw new APIException("Surname not valid");
             }
         }
-
         if (isset($data->gender)) {
             $gender = validate($data->gender, 'alpha');
             if ($gender == false) {
                 throw new APIException("Gender value not valid");
             }
         }
-
         if (isset($data->address)) {
             $address = validate($data->address, 'alphanumeric_space');
             if ($address == false) {
                 throw new APIException("Address not valid");
             }
         }
-
         if (isset($data->phone)) {
             $phone = validate($data->phone, 'integer');
             if ($phone == false) {
                 throw new APIException("Phone number not valid");
             }
         }
-
         if (isset($data->dob)) {
             $dob = validate($data->dob, 'alphanumeric_space');
             if ($dob == false) {
                 throw new APIException("Date of birth format not valid");
             }
         }
-
         if (isset($data->health)) {
             $health = validate($data->health, 'alphanumeric_space');
         } else {
             $health = "";
         }
-
         if (isset($_GET['program_id'])) {
             $program_id = validate($_GET['program_id'], 'primarykey');
             if ($program_id == false) {
                 throw new APIException("Program ID not valid");
             }
         }
-
         if (isset($_GET['class_id'])) {
             $class_id = validate($_GET['class_id'], 'primarykey');
             if ($class_id == false) {
                 throw new APIException("class day not valid");
             }
         }
-
         if (isset($_GET['userid'])) {
             $user_id = validate($_GET['userid'], 'primarykey');
             if ($user_id == false) {
                 throw new APIException("class day not valid");
             }
         }
-
         if (isset($data->program_name)) {
             $program_name = validate($data->program_name, 'alphanumeric_space');
             if ($program_name == false) {
                 throw new APIException("Program Name not valid");
             }
         }
-
         if (isset($data->description)) {
             $description = validate($data->description, 'alphanumeric_space');
             if ($description == false) {
                 throw new APIException("Description not valid");
             }
         }
-
         if (isset($data->program_level)) {
             $program_level = validate($data->program_level, 'alphanumeric_space');
             if ($program_level == false) {
                 throw new APIException("Program level value not valid");
             }
         }
-
         if (isset($data->price)) {
             $price = validate($data->price, 'integer');
             if ($price == false) {
                 throw new APIException("Price value not valid");
             }
         }
-
         if (isset($data->prerequisites)) {
             $prerequisites = validate($data->prerequisites, 'alphanumeric_space');
             if ($prerequisites == false) {
                 throw new APIException("Prerequisites value not valid");
             }
         }
-
         if (isset($data->duration)) {
             $duration = validate($data->duration, 'alphanumeric_space');
             if ($duration == false) {
                 throw new APIException("Duration value not valid");
             }
         }
-
         if (isset($_GET['day'])) {
             $day = validate($_GET['day'], 'alpha');
 
@@ -213,9 +190,11 @@ try {
             }
         }
 
-        // ACTION BASE CASE
 
+        // ACTION BASE CASE
         switch ($validated_action) {
+
+            //login
             case "login":
                 // $_SESSION['sessionObj']->setRequestCounter($counter + 1);
                 $response = new Response();
@@ -242,6 +221,7 @@ try {
                 exit;
                 break;
 
+            //log out
             case "logout":
                 $response = new Response();
                 $_SESSION['sessionObj'] = null;
@@ -253,6 +233,7 @@ try {
                 exit;
                 break;
 
+            //register
             case "signup":
                 $response = new Response();
                 if (isset($username) && isset($email) && isset($password)) {
@@ -278,6 +259,7 @@ try {
                 exit;
                 break;
 
+            //enroll
             case "enroll":
                 $response = new Response();
                 if ($_SESSION['sessionObj']->isLoggedIn()) {
@@ -318,6 +300,7 @@ try {
                 exit;
                 break;
 
+            //check all the enrolled students
             case "allenrollments":
                 $response = new Response();
                 $result = $db->getAllEnrollments();
@@ -330,18 +313,7 @@ try {
                 exit;
                 break;
 
-            case "myenrollments":
-                $response = new Response();
-                $result = $db->findEnrollmentsByUser($user_id);
-                $response->setHttpStatusCode(200);
-                $response->setSuccess(true);
-                $response->setData($result);
-                $response->send();
-                $db->logging('Fetched all enrollments');
-                logFile('Fetched all enrollments');
-                exit;
-                break;
-
+            // check the own enrolled class
             case "myenrolledclass":
                 $response = new Response();
                 if (isset($user_id)) {
@@ -368,6 +340,7 @@ try {
                 exit;
                 break;
 
+            // check all programs
             case "allprograms":
                 $response = new Response();
                 $result = $db->getAllPrograms();
@@ -379,7 +352,8 @@ try {
                 logFile('Fetched all programs');
                 exit;
                 break;
-
+            
+            // check a specific program
             case "findprogram":
                 $response = new Response();
                 if (isset($program_id)) {
@@ -404,7 +378,8 @@ try {
                 $response->send();
                 exit;
                 break;
-
+            
+            // add a program
             case "addprogram":
                 $response = new Response();
                 if ($_SESSION['sessionObj']->isLoggedIn()) {
@@ -430,6 +405,7 @@ try {
                 exit;
                 break;
 
+            // update a program
             case "editprogram":
                 $response = new Response();
                 if (isset($program_id) && isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration)) {
@@ -454,6 +430,7 @@ try {
                 exit;
                 break;
 
+            // delete a program
             case "removeprogram":
                 $response = new Response();
                 if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
@@ -478,31 +455,7 @@ try {
                 exit;
                 break;
 
-            case "findprogram":
-                $response = new Response();
-                if (isset($program_id)) {
-                    $result = $db->getProgram($program_id);
-                    // die(json_encode($result));
-                    if ($result == false) {
-                        $response->setHttpStatusCode(404);
-                        $response->setSuccess(false);
-                        $response->addMessage("Can't find the program with that ID");
-                    } else {
-                        $response->setHttpStatusCode(200);
-                        $response->setSuccess(true);
-                        $response->setData($result);
-                        $db->logging('Fetched program ID: ' . $program_id);
-                        logFile('Fetched program ID: ' . $program_id);
-                    }
-                } else {
-                    $response->setHttpStatusCode(400);
-                    $response->setSuccess(false);
-                    $response->addMessage("Please specify program ID");
-                }
-                $response->send();
-                exit;
-                break;
-
+            // check classes by day
             case "classesbyday":
                 $response = new Response();
                 if (isset($day)) {
@@ -528,6 +481,7 @@ try {
                 exit;
                 break;
 
+            //check classes by program name
             case "classesbyprogram":
                 $response = new Response();
                 if (isset($program_id)) {
@@ -553,6 +507,7 @@ try {
                 exit;
                 break;
 
+            // check a class by classID
             case "classbyid":
                 $response = new Response();
                 if (isset($class_id)) {

@@ -17,6 +17,7 @@ class DB
         }
     }
 
+    // Login
     public function login($username, $password)
     {
         try {
@@ -41,6 +42,7 @@ class DB
         }
     }
 
+    // Register
     public function signUp($username, $email, $password)
     {
         try {
@@ -65,6 +67,7 @@ class DB
         }
     }
 
+    // Record logging history into database
     public function logging($action)
     {
         try {
@@ -94,6 +97,7 @@ class DB
         }
     }
 
+    // Check all the enrolled students
     public function getAllEnrollments()
     {
         try {
@@ -112,6 +116,7 @@ class DB
         }
     }
 
+    // Check if the logged-in user has enrolled a class
     public function findEnrollmentsByUser($login_id)
     {
         try {
@@ -130,6 +135,7 @@ class DB
         }
     }
 
+    // Check email when log in
     public function findAllEmails()
     {
         try {
@@ -148,7 +154,7 @@ class DB
         }
     }
 
-    // Add Program
+    // Add programs
     public function addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration)
     {
         try {
@@ -181,7 +187,7 @@ class DB
     }
 
 
-    // Get All Programs
+    // Check all programs
     public function getAllPrograms()
     {
         try {
@@ -200,7 +206,7 @@ class DB
         }
     }
 
-    // Get Single Program
+    // Check a specific program
     public function getProgram($program_id)
     {
         try {
@@ -220,7 +226,7 @@ class DB
     }
 
 
-    // Update Program
+    // Update a program
     public function updateProgram($program_name, $description, $program_level, $price, $prerequisites, $duration, $program_id)
     {
         try {
@@ -248,7 +254,7 @@ class DB
         }
     }
 
-    // Delete program
+    // Delete a program
     public function deleteProgram($program_id)
     {
         try {
@@ -270,7 +276,7 @@ class DB
         }
     }
 
-    // Search Classes by Time
+    // Search classes by time
     public function getAllClasses($day)
     {
         try {
@@ -289,7 +295,7 @@ class DB
         }
     }
 
-    //Search Classes by Program
+    //Search classes by program
     public function getClassesByProgram($program_id)
     {
         try {
@@ -308,7 +314,7 @@ class DB
         }
     }
 
-    //Get Class by ID
+    //Search class by classID
     public function getClassById($class_id)
     {
         try {
@@ -327,6 +333,7 @@ class DB
         }
     }
 
+    // Enroll a class
     function enroll($login_id, $class_id, $cur_number, $givenname, $surname, $gender, $address, $email, $phone, $dob, $health)
     {
         try {
@@ -359,7 +366,7 @@ class DB
         }
     }
 
-    //View Own Class
+    //View my class
     public function viewOwnClass($user_id)
     {
         try {

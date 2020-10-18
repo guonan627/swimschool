@@ -1,8 +1,9 @@
-// if ("serviceWorker" in navigator) {
-//   window.addEventListener("load", function () {
-//     navigator.serviceWorker.register("service-worker.js");
-//   });
-// }
+// service worker
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("service-worker.js");
+  });
+}
 
 var api = "http://localhost:8888/swimschool/api/api.php";
 
@@ -47,9 +48,9 @@ var api = "http://localhost:8888/swimschool/api/api.php";
 
 window.onload = function () {
   // clear service-worker cache
-  caches.keys().then(function (names) {
-    for (let name of names) caches.delete(name);
-  });
+  // caches.keys().then(function (names) {
+  //   for (let name of names) caches.delete(name);
+  // });
 
   // get last viewed page
   var lastViewedPage = localStorage.getItem("lastViewedPage");
@@ -131,13 +132,6 @@ function fmy() {
   getMyClass();
   localStorage.setItem("lastViewedPage", "myclasspage");
 }
-
-// function fco() {
-//   var show = $(".display");
-//   show.hide();
-//   contactpage.style.display = "block";
-//   localStorage.setItem("lastViewedPage", "contactpage");
-// }
 
 function fse() {
   var show = $(".display");
@@ -317,7 +311,7 @@ function handleReg(event) {
     validForm = false;
   }
 
-  // handle form submission
+  // handle registration form submission
   if (validForm === false) {
     $("#error0").show().text("Please fix the errors").delay(2000).fadeOut(2000);
     return;
@@ -444,8 +438,7 @@ function validateEnroll(event) {
   } else {
     errorhealth.style.display = "none";
   }
-
-  // handle form submission
+  // handle enroll form submission
   if (valid === false) {
     $("#bigerror")
       .show()
@@ -522,16 +515,16 @@ function getAllPrograms() {
           <div class="col s12">
             <div class="card">
               <div class="card-image">
-                <img src="images/1.jpg">
-                <span class="card-title">${program.program_name}</span>
+                <img src="${program.pics}">
+                <span class="card-title indigo-text text-darken-3">${program.program_name}</span>
               </div>
               <div class="card-content">
-                <h5>Program Level:${program.program_level}</h5>
-                <h5>Program Summary:</h5>
+                <h6>Program Level:${program.program_level}</h6>
+                <h6>Program Summary:</h6>
                 <h6>${program.description}</h6>
-                <h5>Time: ${program.duration}</h5>
-                <h5>Price: ${program.price}</h5>
-                <h5>Prerequisites:</h5>
+                <h6>Time: ${program.duration}</h6>
+                <h6>Price: ${program.price}</h6>
+                <h6>Prerequisites:</h5>
                 <h6>${program.prerequisites}</h6>
               </div>
             </div>

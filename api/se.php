@@ -62,16 +62,17 @@ class sessionObject
         return $this->_requestCounter;
     }
 
+    // 24 Hours Limit
     public function oneDayRateLimit()
-    {
+    {   // check if sent request before, and set the first request time 
         if ($this->_startTime == null) {
             $this->_startTime = time();
         }
-        $this->_requestCounter++;
-        $hours = (time() - $this->_startTime / 3600);
-        if ($hours < 24 && $this->_requestCounter > 1000) {
+        $this->_requestCounter++; // add 1 time to the counter
+        $hours = (time() - $this->_startTime / 3600); // calculate how many hours past from the first request
+        if ($hours < 24 && $this->_requestCounter > 1000) { // rate limit control if it is over 24 hours 
             return false;
-        } else if ($hours >= 24){
+        } else if ($hours >= 24){ // counter go back to 0 if it is over 24 hours
             $this->_requestCounter = 0;
         }
         return $this->_requestCounter;
@@ -124,15 +125,14 @@ class sessionObject
         return null;
     }
 
+    // Check if it is authenticated
     public function isLoggedIn()
     {
         $bearerToken = $this->getBearerToken();
         if ($bearerToken == null)
             return false;
-
         if ($bearerToken !== $this->_token)
             return false;
-
         return true;
     }
 }
