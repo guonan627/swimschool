@@ -126,7 +126,7 @@ none
 - dob
 - health
 
-#### Check my enrolled class by userid
+#### Check my enrolled class by userid:
 
 **GET** _http://localhost:8888/swimschool/api/api.php?action=myenrolledclass&userid=19_
 **Required fields:**
