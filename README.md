@@ -98,14 +98,14 @@ none
 
 #### Search Classes by Day:
 
-**GET**http://localhost:8888/swimschool/api/api.php?action=classesbyday&day=Tue
+**GET**http://localhost:8888/swimschool/api/api.php?action=classesbyday&day=Tue_
 **Required fields:**
 
 - day(in URL)
 
 #### Search Classes by Program Name:
 
-**GET**http://localhost:8888/swimschool/api/api.php?action=classesbyprogram&program_id=3
+**GET**http://localhost:8888/swimschool/api/api.php?action=classesbyprogram&program_id=3_
 **Required fields:**
 
 - program_id(in URL)
@@ -128,7 +128,7 @@ none
 
 #### Check my enrolled class by userid
 
-**GET**http://localhost:8888/swimschool/api/api.php?action=myenrolledclass&userid=19
+**GET**http://localhost:8888/swimschool/api/api.php?action=myenrolledclass&userid=19_
 **Required fields:**
 
 - userid(in URL)
