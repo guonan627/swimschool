@@ -49,7 +49,6 @@ USERS: anonymous, admin,student
 #### Logout:
 **POST** _http://localhost:8888/swimschool/api/api.php?action=logout_  
 **Required fields:**
-
 none
 
 #### Get all programs:
