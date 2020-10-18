@@ -58,14 +58,14 @@ none
 **Required fields:**
 none
 
-#### Get single program by programID:
+#### Get single program by programID: (for admin panel)
 
 **GET** _http://localhost:8888/swimschool/api/api.php?action=findprogram&program_id=1_  
 **Required fields:**
 
 - program_id (in URL)
 
-#### Create prorgram:
+#### Create prorgram: (for admin panel)
 
 **POST** _http://localhost:8888/swimschool/api/api.php?action=addprogram_  
 **Required fields:**
@@ -77,7 +77,7 @@ none
 - prerequisites
 - duration
 
-#### Update program:
+#### Update program: (for admin panel)
 
 **PATCH** _http://localhost:8888/swimschool/api/api.php?action=editprogram&program_id=1_  
 **Required fields:**
@@ -90,7 +90,7 @@ none
 - prerequisites
 - duration
 
-#### Delete program:
+#### Delete program: (for admin panel)
 
 **DELETE** _http://localhost:8888/swimschool/api/api.php?action=removeprogram&program_id=11_  
 **Required fields:**
@@ -111,7 +111,7 @@ none
 
 - program_id(in URL)
 
-#### Enroll:
+#### Enroll a class:
 
 **POST** _http://localhost:8888/swimschool/api/api.php?action=enroll_  
 **Required fields:**
@@ -127,7 +127,7 @@ none
 - dob
 - health
 
-#### check my enrolled class by userid
+#### Check my enrolled class by userid
 
 **GET**http://localhost:8888/swimschool/api/api.php?action=myenrolledclass&userid=19
 **Required fields:**
@@ -141,12 +141,15 @@ none
 - Limit per session request to 1,000 in a 24hour period
 
 ## Current Status
-
 - Frontend - complete
 - Backend - complete all the frontend required APIs and some admin panel required APIs
 - Admin panel - Not Started
 
-## What to Do Next for improvement
-- add 
+## What to do next for improvement if time allowed
+- Jason Web Token to be used to increase authentication security
+- add "view my classesmates" and "view class-times photos" features in "my class" page
+- add the bithday input validation when enroll (must be over the program age requirement )
+- add more features in "my account setting" page, for example, change user passwords
+- fix the bug in all "fetch request" pages that when refresh the page then the fetch content disappear, but the fetch content will come up when click into the page again
 
 

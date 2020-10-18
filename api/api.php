@@ -27,10 +27,10 @@ try {
     $_SESSION['sessionObj']->setIp($_SERVER['REMOTE_ADDR']);
 
     // general rate limiter: 1 request/sec
-    if (isset($_SESSION['LAST_CALL'])) {
-        $last = strtotime($_SESSION['LAST_CALL']);
-        $curr = strtotime(date("Y-m-d h:i:s"));
-        $sec = abs($curr - $last);
+    if (isset($_SESSION['LAST_CALL'])) {  
+        $last = strtotime($_SESSION['LAST_CALL']); 
+        $curr = strtotime(date("Y-m-d h:i:s")); //record the time current request
+        $sec = abs($curr - $last);  // calculate how many seconds past from the last request
         if ($sec <= 1) {
             throw new APIException("Rate limit exceeded");
             http_response_code(429);
@@ -262,7 +262,7 @@ try {
             //enroll
             case "enroll":
                 $response = new Response();
-                if ($_SESSION['sessionObj']->isLoggedIn()) {
+                if ($_SESSION['sessionObj']->isLoggedIn()) { //check the user is logged in or not
                     if (isset($login_id) && isset($class_id) && isset($givenname) && isset($surname) && isset($address) && isset($email) && isset($phone) && isset($dob) && isset($health)) {
                         $enrollments = $db->findEnrollmentsByUser($login_id);
                         $class = $db->getClassById($class_id);
@@ -316,25 +316,31 @@ try {
             // check the own enrolled class
             case "myenrolledclass":
                 $response = new Response();
-                if (isset($user_id)) {
-                    $result = $db->findEnrollmentsByUser($user_id);
-                    if (count($result) == 0) {
-                        $response->setHttpStatusCode(404);
-                        $response->setSuccess(false);
-                        $response->addMessage("You have not enrolled any class");
+                if ($_SESSION['sessionObj']->isLoggedIn()) { // check the user is logged in or not
+                    if (isset($user_id)) {
+                        $result = $db->findEnrollmentsByUser($user_id);
+                        if (count($result) == 0) {
+                            $response->setHttpStatusCode(404);
+                            $response->setSuccess(false);
+                            $response->addMessage("You have not enrolled any class");
+                        } else {
+                            $my_class_id = (int)$result[0]["class_id"];
+                            $my_class = $db->getClassById($my_class_id);
+                            $response->setHttpStatusCode(200);
+                            $response->setSuccess(true);
+                            $response->setData($my_class);
+                            $db->logging('Fetched all enrollments');
+                            logFile('Fetched all enrollments');
+                        }
                     } else {
-                        $my_class_id = (int)$result[0]["class_id"];
-                        $my_class = $db->getClassById($my_class_id);
-                        $response->setHttpStatusCode(200);
-                        $response->setSuccess(true);
-                        $response->setData($my_class);
-                        $db->logging('Fetched all enrollments');
-                        logFile('Fetched all enrollments');
+                        $response->setHttpStatusCode(400);
+                        $response->setSuccess(false);
+                        $response->addMessage("Please provide user ID");
                     }
-                } else {
-                    $response->setHttpStatusCode(400);
+                }else {
+                    $response->setHttpStatusCode(401);
                     $response->setSuccess(false);
-                    $response->addMessage("Please provide user ID");
+                    $response->addMessage("You are not logged in.");
                 }
                 $response->send();
                 exit;

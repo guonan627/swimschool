@@ -8,9 +8,49 @@
       "type": "image/png"
     },
     {
-      "src": "./imges/swim.png",
+      "src": "./imges/1.jpg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/jpg"
+    },
+    {
+      "src": "./imges/2.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    },
+    {
+      "src": "./imges/3.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    },
+    {
+      "src": "./imges/P1.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    },
+    {
+      "src": "./imges/P2.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    },
+    {
+      "src": "./imges/P3.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    },
+    {
+      "src": "./imges/P4.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    },
+    {
+      "src": "./imges/P5.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
+    },
+    {
+      "src": "./imges/P6.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg"
     }
   ],
   "start_url": "./index.html",

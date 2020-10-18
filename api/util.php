@@ -80,7 +80,6 @@ class Response
 }
 
 // Helper functions
-
 function logFile($action)
 {
     try {
@@ -129,7 +128,7 @@ function validate($dirty_string, $action_code)
             }
             return false;
         case 'integer':
-            if (is_numeric($dirty_string)) { // not enough
+            if (is_numeric($dirty_string)) { 
                 return (int)$dirty_string;
             }
             return false;
