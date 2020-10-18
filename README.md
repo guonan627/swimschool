@@ -115,7 +115,7 @@ none
 **POST** _http://localhost:8888/swimschool/api/api.php?action=enroll_  
 **Required fields:**
 
-- login_id
+- login_id 
 - class_id
 - class_time
 - givenname
