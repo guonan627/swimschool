@@ -27,8 +27,8 @@ try {
     $_SESSION['sessionObj']->setIp($_SERVER['REMOTE_ADDR']);
 
     // general rate limiter: 1 request/sec
-    if (isset($_SESSION['LAST_CALL'])) {  
-        $last = strtotime($_SESSION['LAST_CALL']); 
+    if (isset($_SESSION['LAST_CALL'])) {
+        $last = strtotime($_SESSION['LAST_CALL']);
         $curr = strtotime(date("Y-m-d h:i:s")); //record the time current request
         $sec = abs($curr - $last);  // calculate how many seconds past from the last request
         if ($sec <= 1) {
@@ -50,7 +50,7 @@ try {
     // debug
     // die(json_encode($_SESSION['sessionObj']->oneDayRateLimit()));
 
-    
+
     if (isset($_GET['action'])) {
         $validated_action = validate($_GET['action'], 'alpha');
         if ($validated_action == false) {
@@ -194,7 +194,7 @@ try {
         // ACTION BASE CASE
         switch ($validated_action) {
 
-            //login
+                //login
             case "login":
                 // $_SESSION['sessionObj']->setRequestCounter($counter + 1);
                 $response = new Response();
@@ -221,7 +221,7 @@ try {
                 exit;
                 break;
 
-            //log out
+                //log out
             case "logout":
                 $response = new Response();
                 $_SESSION['sessionObj'] = null;
@@ -233,7 +233,7 @@ try {
                 exit;
                 break;
 
-            //register
+                //register
             case "signup":
                 $response = new Response();
                 if (isset($username) && isset($email) && isset($password)) {
@@ -259,12 +259,12 @@ try {
                 exit;
                 break;
 
-            //enroll
+                //enroll
             case "enroll":
                 $response = new Response();
                 if ($_SESSION['sessionObj']->isLoggedIn()) { //check the user is logged in or not
                     if (isset($login_id) && isset($class_id) && isset($givenname) && isset($surname) && isset($address) && isset($email) && isset($phone) && isset($dob) && isset($health)) {
-                        $enrollments = $db->findEnrollmentsByUser($login_id);
+                        $enrollments = $db->findEnrollmentsByUser($_SESSION['sessionObj']->getUserId());
                         $class = $db->getClassById($class_id);
                         if ($class["cur_number"] < $class["max_number"]) {
                             if (count($enrollments) > 0) {
@@ -272,13 +272,19 @@ try {
                                 $response->setSuccess(false);
                                 $response->addMessage("You can only enroll in one class");
                             } else {
-                                $cur_number = $class["cur_number"] + 1;
-                                $result = $db->enroll($login_id, $class_id, $cur_number, $givenname, $surname, $gender, $address, $email, $phone, $dob, $health);
-                                $response->setHttpStatusCode(201);
-                                $response->setSuccess(true);
-                                $response->addMessage("You have enrolled successfully");
-                                $db->logging("User ID: " . $login_id . ' enrolled class ' . $class_id);
-                                logFile("User ID: " . $login_id . ' enrolled class ' . $class_id);
+                                if ($login_id == $_SESSION['sessionObj']->getUserId()) {
+                                    $cur_number = $class["cur_number"] + 1;
+                                    $result = $db->enroll($login_id, $class_id, $cur_number, $givenname, $surname, $gender, $address, $email, $phone, $dob, $health);
+                                    $response->setHttpStatusCode(201);
+                                    $response->setSuccess(true);
+                                    $response->addMessage("You have enrolled successfully");
+                                    $db->logging("User ID: " . $login_id . ' enrolled class ' . $class_id);
+                                    logFile("User ID: " . $login_id . ' enrolled class ' . $class_id);
+                                } else {
+                                    $response->setHttpStatusCode(400);
+                                    $response->setSuccess(false);
+                                    $response->addMessage("Invalid User ID");
+                                }
                             }
                         } else {
                             $response->setHttpStatusCode(400);
@@ -300,7 +306,7 @@ try {
                 exit;
                 break;
 
-            //check all the enrolled students
+                //check all the enrolled students
             case "allenrollments":
                 $response = new Response();
                 $result = $db->getAllEnrollments();
@@ -313,11 +319,11 @@ try {
                 exit;
                 break;
 
-            // check the own enrolled class
+                // check the own enrolled class
             case "myenrolledclass":
                 $response = new Response();
-                // if ($_SESSION['sessionObj']->isLoggedIn()) { // check the user is logged in or not
-                    if (isset($user_id)) {
+                if ($_SESSION['sessionObj']->isLoggedIn()) { // check the user is logged in or not
+                    if (isset($user_id) && $user_id == $_SESSION['sessionObj']->getUserId()) {
                         $result = $db->findEnrollmentsByUser($user_id);
                         if (count($result) == 0) {
                             $response->setHttpStatusCode(404);
@@ -335,18 +341,18 @@ try {
                     } else {
                         $response->setHttpStatusCode(400);
                         $response->setSuccess(false);
-                        $response->addMessage("Please provide user ID");
+                        $response->addMessage("Invalid user ID");
                     }
-                // }else {
-                //     $response->setHttpStatusCode(401);
-                //     $response->setSuccess(false);
-                //     $response->addMessage("You are not logged in.");
-                // }
+                } else {
+                    $response->setHttpStatusCode(401);
+                    $response->setSuccess(false);
+                    $response->addMessage("You are not logged in.");
+                }
                 $response->send();
                 exit;
                 break;
 
-            // check all programs
+                // check all programs
             case "allprograms":
                 $response = new Response();
                 $result = $db->getAllPrograms();
@@ -358,8 +364,8 @@ try {
                 logFile('Fetched all programs');
                 exit;
                 break;
-            
-            // check a specific program
+
+                // check a specific program
             case "findprogram":
                 $response = new Response();
                 if (isset($program_id)) {
@@ -384,8 +390,8 @@ try {
                 $response->send();
                 exit;
                 break;
-            
-            // add a program
+
+                // add a program
             case "addprogram":
                 $response = new Response();
                 if ($_SESSION['sessionObj']->isLoggedIn()) {
@@ -411,7 +417,7 @@ try {
                 exit;
                 break;
 
-            // update a program
+                // update a program
             case "editprogram":
                 $response = new Response();
                 if (isset($program_id) && isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration)) {
@@ -436,7 +442,7 @@ try {
                 exit;
                 break;
 
-            // delete a program
+                // delete a program
             case "removeprogram":
                 $response = new Response();
                 if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
@@ -461,7 +467,7 @@ try {
                 exit;
                 break;
 
-            // check classes by day
+                // check classes by day
             case "classesbyday":
                 $response = new Response();
                 if (isset($day)) {
@@ -487,7 +493,7 @@ try {
                 exit;
                 break;
 
-            //check classes by program name
+                //check classes by program name
             case "classesbyprogram":
                 $response = new Response();
                 if (isset($program_id)) {
@@ -513,7 +519,7 @@ try {
                 exit;
                 break;
 
-            // check a class by classID
+                // check a class by classID
             case "classbyid":
                 $response = new Response();
                 if (isset($class_id)) {

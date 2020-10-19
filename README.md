@@ -138,6 +138,7 @@ none
 - Logging feature that accounts for every request with IP, browser, timestamp and action and record them in the database and txt document
 - Rate limit to control one request per second per user session
 - Limit per session request to 1,000 in a 24hour period
+- get userid from backend when enroll a class and view the enrolled class instead of from localstorage
 
 ## Current Status
 - Frontend - complete
@@ -145,10 +146,13 @@ none
 - Admin panel - Not Started
 
 ## What to do next for improvement if time allowed
-- Jason Web Token to be used to increase authentication security
-- add "view my classesmates" and "view class-times photos" features in "my class" page
-- add the bithday input validation when enroll (must be over the program age requirement )
+- Jason Web Token/OAuth to be used to increase authentication security
+- add "view my classesmates" and "view class-time photos" features in "my class" page
+- add the bithday input validation when fill in enroll form (must be over the program age requirement )
+- add the rating feature linking with each enrolled class. 
+- allow one login user to enroll several classes instead of only one to make the app more practical.
 - add more features in "my account setting" page, for example, change user passwords
-- fix the bug in all "fetch request" pages that when refresh the page then the fetch content disappear, but the fetch content will come up when click into the page again
+- fix the bug in all "fetch request" pages that when refresh the page then the fetch content disappear, but the fetch content will come up again when click back to the page
+
 
 

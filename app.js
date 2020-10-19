@@ -47,10 +47,10 @@ var api = "http://localhost:8888/swimschool/api/api.php";
 // address finder api end
 
 window.onload = function () {
-  // clear service-worker cache
-  // caches.keys().then(function (names) {
-  //   for (let name of names) caches.delete(name);
-  // });
+  // clear service - worker cache
+  caches.keys().then(function (names) {
+    for (let name of names) caches.delete(name);
+  });
 
   // get last viewed page
   var lastViewedPage = localStorage.getItem("lastViewedPage");
@@ -675,11 +675,23 @@ function getMyClass() {
     method: "GET",
     mode: "cors",
     credentials: "include",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // only logged in users can see enrolled class
+    },
   })
     .then(function (res) {
+      if (res.status == 401) {
+        return showAlert("error", "You are not logged in.");
+      }
       if (res.status == 404) {
         showAlert("error", "You don't have any enrolled class");
         place_holder.innerHTML = "No class found";
+        return;
+      }
+      if (res.status == 400) {
+        return showAlert("error", "Invalid User ID");
       }
       return res.json();
     })
