@@ -58,6 +58,11 @@ window.onload = function () {
     $(".display").hide();
     var page = document.getElementById(lastViewedPage);
     page.style.display = "block";
+    if (lastViewedPage == "myclasspage") {
+      getMyClass();
+    } else if (lastViewedPage == "programpage") {
+      getAllPrograms();
+    }
   } else {
     // show home page
     fho();

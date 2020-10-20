@@ -47,6 +47,7 @@ USERS: anonymous, admin,student
 - password
 
 #### Logout:
+
 **POST** _http://localhost:8888/swimschool/api/api.php?action=logout_  
 **Required fields:**
 none
@@ -115,7 +116,7 @@ none
 **POST** _http://localhost:8888/swimschool/api/api.php?action=enroll_  
 **Required fields:**
 
-- login_id 
+- login_id
 - class_id
 - class_time
 - givenname
@@ -141,18 +142,16 @@ none
 - get userid from backend when enroll a class and view the enrolled class instead of from localstorage
 
 ## Current Status
+
 - Frontend - complete
 - Backend - complete all the frontend required APIs and some admin panel required APIs
 - Admin panel - Not Started
 
 ## What to do next for improvement if time allowed
+
 - Jason Web Token/OAuth to be used to increase authentication security
 - add "view my classesmates" and "view class-time photos" features in "my class" page
 - add the bithday input validation when fill in enroll form (must be over the program age requirement )
-- add the rating feature linking with each enrolled class. 
+- add the rating feature linking with each enrolled class.
 - allow one login user to enroll several classes instead of only one to make the app more practical.
 - add more features in "my account setting" page, for example, change user passwords
-- fix the bug in all "fetch request" pages that when refresh the page then the fetch content disappear, but the fetch content will come up again when click back to the page
-
-
-
