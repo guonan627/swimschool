@@ -154,7 +154,7 @@ class DB
         }
     }
 
-    // Add programs
+    // Add program
     public function addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration)
     {
         try {
@@ -384,4 +384,112 @@ class DB
             die();
         }
     }
+
+    // Check all classes
+    public function allClasses()
+    {
+        try {
+            $query = 'SELECT * FROM class';
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($result == false) {
+                return false;
+            } else {
+                return $result;
+            }
+        } catch (PDOException $e) {
+            echo "get classes error";
+            die();
+        }
+    }
+
+    // Add class
+    public function addClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number,$cur_number,$program_id,$class_id)
+    {
+        try {
+            // Create query
+            $query = 'INSERT INTO class SET start_date = :start_date, end_date = :end_date, daytime = :daytime, time = :time, trainer_name = :trainer_name, max_number = :max_number, cur_number = :cur_number, program_id = :program_id, class_id = :class_id' ;
+
+            // Prepare statement
+            $stmt = $this->conn->prepare($query);
+
+            // Bind data
+            $stmt->bindParam(':start_date', $start_date);
+            $stmt->bindParam(':end_date', $end_date);
+            $stmt->bindParam(':daytime', $daytime);
+            $stmt->bindParam(':time', $time);
+            $stmt->bindParam(':trainer_name', $trainer_name);
+            $stmt->bindParam(':max_number', $max_number);
+            $stmt->bindParam(':cur_number', $cur_number);
+            $stmt->bindParam(':program_id', $program_id);
+            $stmt->bindParam(':class_id', $class_id);
+
+            // Execute query
+            $result = $stmt->execute();
+            //update playerid with $conn->lastInsertId();
+            if ($result == false) {
+                return false;
+            } else {
+                return array("request" => "created a new class");
+            }
+        } catch (PDOException $e) {
+            echo "create class error";
+            die();
+        }
+    }
+
+    // Update a program
+    public function updateClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number,$cur_number,$program_id)
+    {
+        try {
+            $query = 'UPDATE class SET start_date = :start_date, end_date = :end_date, daytime = :daytime, time = :time, trainer_name = :trainer_name, max_number = :max_number, cur_number = :cur_number, program_id = :program_id WHERE class_id = :class_id';
+
+            $stmt = $this->conn->prepare($query);
+
+            // Bind data
+            $stmt->bindParam(':start_date', $start_date);
+            $stmt->bindParam(':end_date', $end_date);
+            $stmt->bindParam(':daytime', $daytime);
+            $stmt->bindParam(':time', $time);
+            $stmt->bindParam(':trainer_name', $trainer_name);
+            $stmt->bindParam(':max_number', $max_number);
+            $stmt->bindParam(':cur_number', $cur_number);
+            $stmt->bindParam(':program_id', $program_id);
+            $stmt->bindParam(':class_id', $class_id);
+
+            $result = $stmt->execute();
+            if ($result == false) {
+                return false;
+            } else {
+                return $this->getClassById($class_id);
+            }
+        } catch (PDOException $e) {
+            echo "update class error";
+            die();
+        }
+    }
+
+    // Delete a program
+    public function deleteClass($class_id)
+    {
+        try {
+            $query = 'DELETE FROM class WHERE class_id = :class_id';
+
+            $stmt = $this->conn->prepare($query);
+
+            $stmt->bindParam(':class_id', $class_id);
+
+            $result = $stmt->execute();
+            if ($result == false) {
+                return false;
+            } else {
+                return array("request" => "removed the class");
+            }
+        } catch (PDOException $e) {
+            echo "get the class error";
+            die();
+        }
+    }
+
 }

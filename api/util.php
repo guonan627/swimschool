@@ -47,6 +47,7 @@ class Response
     {
         // set response header contact type to json utf-8
         header('Content-type:application/json;charset=utf-8');
+        header('Access-Control-Allow-Origin:*');
 
         // if response is not set up correctly, e.g. not numeric in status code or success not true or false
         // send a error response

@@ -544,7 +544,95 @@ try {
                 exit;
                 break;
 
+                // check all classes
+            case "allclasses":
+                $response = new Response();
+                $result = $db->allClasses();
+                $response->setHttpStatusCode(200);
+                $response->setSuccess(true);
+                $response->setData($result);
+                $response->send();
+                $db->logging('Fetched all classes');
+                logFile('Fetched all classes');
+                exit;
+                break;
 
+                // add a class
+            case "addclass":
+                $response = new Response();
+                if ($_SESSION['sessionObj']->isLoggedIn()) {
+                    if (isset($start_date) && isset($end_date) && isset($daytime) && isset($time) && isset($trainer_name) && isset($max_number) && isset($cur_number) && isset($program_id) && isset($class_id)) {
+                        $result = $db->addClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number,$cur_number,$program_id,$class_id);
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($result);
+                        $db->logging('Added new class on: ' . $daytime);
+                        logFile('Added new class on: ' . $daytime);
+                    } else {
+                        $response->setHttpStatusCode(400);
+                        $response->setSuccess(false);
+                        $response->addMessage("Please provide all information of the class.");
+                    }
+                } else {
+                    $response->setHttpStatusCode(401);
+                    $response->setSuccess(false);
+                    $response->addMessage("You are not logged in.");
+                }
+                $response->send();
+                exit;
+                break;
+
+
+                // update a class
+            case "editclass":
+                $response = new Response();
+                if (isset($start_date) && isset($end_date) && isset($daytime) && isset($time) && isset($trainer_name) && isset($max_number) && isset($cur_number) && isset($program_id) && isset($class_id)) {
+                    $result = $db->updateClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number,$cur_number,$program_id,$class_id);
+                    if ($result == false) {
+                        $response->setHttpStatusCode(404);
+                        $response->setSuccess(false);
+                        $response->addMessage("Can't find the class with that ID");
+                    } else {
+                        $response->setHttpStatusCode(200);
+                        $response->setSuccess(true);
+                        $response->setData($result);
+                        $db->logging('Updated the class on: ' . $daytime);
+                        logFile('Updated the class on: ' . $daytime );
+                    }
+                } else {
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Please provide all information of the class.");
+                }
+                $response->send();
+                exit;
+                break;
+
+                // delete a class
+            case "removeclass":
+                $response = new Response();
+                if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
+                    if (isset($class_id)) {
+                        $result = $db->deleteClass($class_id);
+                        $response->setHttpStatusCode(204);
+                        $response->setSuccess(true);
+                        $response->addMessage("class deleted");
+                        $db->logging('Removed the class on : ' . $daytime);
+                        logFile('Removed the class on: ' . $daytime);
+                    } else {
+                        $response->setHttpStatusCode(400);
+                        $response->setSuccess(false);
+                        $response->addMessage("Please provide class ID.");
+                    }
+                } else {
+                    $response->setHttpStatusCode(400);
+                    $response->setSuccess(false);
+                    $response->addMessage("Incorrect request method");
+                }
+                $response->send();
+                exit;
+                break;
+                
             default:
                 throw new APIException("incorrect action code");
                 break;
