@@ -42,10 +42,10 @@ RUN mkdir /opt/webapp
 WORKDIR /opt/webapp
 
 RUN set -eux; \
-  git clone https://github.com/jptafe/sqs; \
+  git clone https://github.com/guonan627/swimschool; \
   rm -rf /var/www/html; \
-  ln -sf /opt/webapp/sqs/src /var/www/html; \
-  ln -sf /opt/webapp/sqs/sqs_api /var/www/html/sqs_api;
+  ln -sf /opt/webapp/swimschool/var/www/html; \
+  ln -sf /opt/webapp/swimschool/api;
 
 RUN service mysql start && mysql -u root < /opt/webapp/sqs/sqs_api/sql/sqs.sql;
 

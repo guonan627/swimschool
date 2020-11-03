@@ -108,6 +108,23 @@ function logFile($action)
     }
 }
 
+// if (isset($_SERVER['HTTP_REFERRER'])){
+//     $this->referrer = $_SERVE['HTTP_REFERRER'];
+// }else {
+//     throw new APIException("No referrer");
+// }
+
+// // whitelist referral
+// function domainLock(){
+//     if ((strops($this->referrer,'localhost:8888') !== false)||
+//         (strops($this->referrer,'swimschool') !== false)) {
+//             return true;
+//         } else {
+//             // throw new APIException("invalid referrer");
+//             return false;
+//         }
+// }
+
 function sanatise($dirty_string)
 {
     $clean_string = stripslashes($dirty_string);

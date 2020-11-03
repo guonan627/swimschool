@@ -389,7 +389,7 @@ class DB
     public function allClasses()
     {
         try {
-            $query = 'SELECT * FROM class';
+            $query = 'SELECT * FROM class INNER JOIN program ON class.program_id = program.program_id';
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -405,11 +405,11 @@ class DB
     }
 
     // Add class
-    public function addClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number,$cur_number,$program_id,$class_id)
+    public function addClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number, $cur_number, $program_id, $class_id)
     {
         try {
             // Create query
-            $query = 'INSERT INTO class SET start_date = :start_date, end_date = :end_date, daytime = :daytime, time = :time, trainer_name = :trainer_name, max_number = :max_number, cur_number = :cur_number, program_id = :program_id, class_id = :class_id' ;
+            $query = 'INSERT INTO class SET start_date = :start_date, end_date = :end_date, daytime = :daytime, time = :time, trainer_name = :trainer_name, max_number = :max_number, cur_number = :cur_number, program_id = :program_id, class_id = :class_id';
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
@@ -440,7 +440,7 @@ class DB
     }
 
     // Update a program
-    public function updateClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number,$cur_number,$program_id)
+    public function updateClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number, $cur_number, $program_id)
     {
         try {
             $query = 'UPDATE class SET start_date = :start_date, end_date = :end_date, daytime = :daytime, time = :time, trainer_name = :trainer_name, max_number = :max_number, cur_number = :cur_number, program_id = :program_id WHERE class_id = :class_id';
@@ -491,5 +491,4 @@ class DB
             die();
         }
     }
-
 }

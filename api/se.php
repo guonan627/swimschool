@@ -62,6 +62,7 @@ class sessionObject
         return $this->_requestCounter;
     }
 
+
     // 24 Hours Limit
     public function oneDayRateLimit()
     {   // check if sent request before, and set the first request time 
