@@ -145,7 +145,7 @@ none
 
 - Frontend - complete
 - Backend - complete all the frontend required APIs and some admin panel required APIs
-- Admin panel - Not Started
+- Admin panel(react) - in the process(complete the router structure and some axios requests).
 
 ## What to do next for improvement if time allowed
 
