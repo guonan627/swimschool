@@ -419,7 +419,15 @@ try {
 
                 // update a program
             case "editprogram":
+                // echo json_encode();
                 $response = new Response();
+
+                // CORS REQUEST WORKS ON POSTMAN, BUT NOT ON BROWSER
+
+                // $_SESSION['sessionObj'] always empty
+
+                // if ($_SESSION['sessionObj']->isLoggedIn()) {
+                //     if ($_SESSION['sessionObj']->getRole() == 'Admin') {
                 if (isset($program_id) && isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration)) {
                     $result = $db->updateProgram($program_name, $description, $program_level, $price, $prerequisites, $duration, $program_id);
                     if ($result == false) {
@@ -438,6 +446,17 @@ try {
                     $response->setSuccess(false);
                     $response->addMessage("Please provide program name, description, program level, price, prerequisites and duration.");
                 }
+                //     } else {
+                //         $response->setHttpStatusCode(403);
+                //         $response->setSuccess(false);
+                //         $response->addMessage("Access denied, only Admin user can edit programs");
+                //     }
+                // } else {
+                //     $response->setHttpStatusCode(401);
+                //     $response->setSuccess(false);
+                //     $response->setData($_SESSION['sessionObj']->getUserId());
+                //     $response->addMessage("You are not logged in.");
+                // }
                 $response->send();
                 exit;
                 break;
@@ -562,7 +581,7 @@ try {
                 $response = new Response();
                 if ($_SESSION['sessionObj']->isLoggedIn()) {
                     if (isset($start_date) && isset($end_date) && isset($daytime) && isset($time) && isset($trainer_name) && isset($max_number) && isset($cur_number) && isset($program_id) && isset($class_id)) {
-                        $result = $db->addClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number,$cur_number,$program_id,$class_id);
+                        $result = $db->addClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number, $cur_number, $program_id, $class_id);
                         $response->setHttpStatusCode(200);
                         $response->setSuccess(true);
                         $response->setData($result);
@@ -587,7 +606,7 @@ try {
             case "editclass":
                 $response = new Response();
                 if (isset($start_date) && isset($end_date) && isset($daytime) && isset($time) && isset($trainer_name) && isset($max_number) && isset($cur_number) && isset($program_id) && isset($class_id)) {
-                    $result = $db->updateClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number,$cur_number,$program_id,$class_id);
+                    $result = $db->updateClass($start_date, $end_date, $daytime, $time, $trainer_name, $max_number, $cur_number, $program_id, $class_id);
                     if ($result == false) {
                         $response->setHttpStatusCode(404);
                         $response->setSuccess(false);
@@ -597,7 +616,7 @@ try {
                         $response->setSuccess(true);
                         $response->setData($result);
                         $db->logging('Updated the class on: ' . $daytime);
-                        logFile('Updated the class on: ' . $daytime );
+                        logFile('Updated the class on: ' . $daytime);
                     }
                 } else {
                     $response->setHttpStatusCode(400);
@@ -632,7 +651,7 @@ try {
                 $response->send();
                 exit;
                 break;
-                
+
             default:
                 throw new APIException("incorrect action code");
                 break;

@@ -45,9 +45,19 @@ class Response
     // in json format
     public function send()
     {
-        // set response header contact type to json utf-8
+        // setup CORS
         header('Content-type:application/json;charset=utf-8');
-        header('Access-Control-Allow-Origin:*');
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
+        // handle preflight request with the OPTIONS method
+        $method = $_SERVER['REQUEST_METHOD'];
+        if ($method == "OPTIONS") {
+            header('Access-Control-Allow-Origin: *');
+            header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
+            header("HTTP/1.1 200 OK");
+            exit(0);
+        }
 
         // if response is not set up correctly, e.g. not numeric in status code or success not true or false
         // send a error response
@@ -146,7 +156,7 @@ function validate($dirty_string, $action_code)
             }
             return false;
         case 'integer':
-            if (is_numeric($dirty_string)) { 
+            if (is_numeric($dirty_string)) {
                 return (int)$dirty_string;
             }
             return false;
