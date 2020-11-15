@@ -144,8 +144,8 @@ none
 ## Current Status
 
 - Frontend - complete
-- Backend - complete all the frontend required APIs and some admin panel required APIs
-- Admin panel(react) - in the process(complete the router structure and some axios requests).
+- Backend - complete all the frontend required APIs and almost admin panel required APIs
+- Admin panel(react) - 90% completed except for a small bug.
 
 ## What to do next for improvement if time allowed
 
