@@ -182,6 +182,12 @@ try {
                 throw new APIException("Duration value not valid");
             }
         }
+        if (isset($data->pics)) {
+            $pics = validate($data->pics, 'alphanumeric_space');
+            if ($pics == false) {
+                throw new APIException("Image url value not valid");
+            }
+        }
         if (isset($_GET['day'])) {
             $day = validate($_GET['day'], 'alpha');
 
@@ -394,24 +400,24 @@ try {
                 // add a program
             case "addprogram":
                 $response = new Response();
-                if ($_SESSION['sessionObj']->isLoggedIn()) {
-                    if (isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration)) {
-                        $result = $db->addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration);
-                        $response->setHttpStatusCode(200);
-                        $response->setSuccess(true);
-                        $response->setData($result);
-                        $db->logging('Added new program: ' . $program_name);
-                        logFile('Added new program: ' . $program_name);
-                    } else {
-                        $response->setHttpStatusCode(400);
-                        $response->setSuccess(false);
-                        $response->addMessage("Please provide program name, description, program level, price, prerequisites and duration.");
-                    }
+                // if ($_SESSION['sessionObj']->isLoggedIn()) {
+                if (isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration) && isset($pics)) {
+                    $result = $db->addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration, $pics);
+                    $response->setHttpStatusCode(200);
+                    $response->setSuccess(true);
+                    $response->setData($result);
+                    $db->logging('Added new program: ' . $program_name);
+                    logFile('Added new program: ' . $program_name);
                 } else {
-                    $response->setHttpStatusCode(401);
+                    $response->setHttpStatusCode(400);
                     $response->setSuccess(false);
-                    $response->addMessage("You are not logged in.");
+                    $response->addMessage("Please provide program name, description, program level, price, prerequisites and duration.");
                 }
+                // } else {
+                //     $response->setHttpStatusCode(401);
+                //     $response->setSuccess(false);
+                //     $response->addMessage("You are not logged in.");
+                // }
 
                 $response->send();
                 exit;

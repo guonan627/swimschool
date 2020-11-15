@@ -155,11 +155,11 @@ class DB
     }
 
     // Add program
-    public function addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration)
+    public function addProgram($program_name, $description, $program_level, $price, $prerequisites, $duration, $pics)
     {
         try {
             // Create query
-            $query = 'INSERT INTO program SET program_name = :program_name, description = :description, program_level = :program_level, price = :price, prerequisites = :prerequisites, duration = :duration';
+            $query = 'INSERT INTO program SET program_name = :program_name, description = :description, program_level = :program_level, price = :price, prerequisites = :prerequisites, duration = :duration, pics = :pics';
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
@@ -171,6 +171,7 @@ class DB
             $stmt->bindParam(':price', $price);
             $stmt->bindParam(':prerequisites', $prerequisites);
             $stmt->bindParam(':duration', $duration);
+            $stmt->bindParam(':pics', $pics);
 
             // Execute query
             $result = $stmt->execute();
