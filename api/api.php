@@ -434,8 +434,8 @@ try {
 
                 // if ($_SESSION['sessionObj']->isLoggedIn()) {
                 //     if ($_SESSION['sessionObj']->getRole() == 'Admin') {
-                if (isset($program_id) && isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration)) {
-                    $result = $db->updateProgram($program_name, $description, $program_level, $price, $prerequisites, $duration, $program_id);
+                if (isset($program_id) && isset($program_name) && isset($description) && isset($program_level) && isset($price) && isset($prerequisites) && isset($duration) && isset($pics)) {
+                    $result = $db->updateProgram($program_name, $description, $program_level, $price, $prerequisites, $duration, $program_id, $pics);
                     if ($result == false) {
                         $response->setHttpStatusCode(404);
                         $response->setSuccess(false);

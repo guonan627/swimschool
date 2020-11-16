@@ -228,10 +228,10 @@ class DB
 
 
     // Update a program
-    public function updateProgram($program_name, $description, $program_level, $price, $prerequisites, $duration, $program_id)
+    public function updateProgram($program_name, $description, $program_level, $price, $prerequisites, $duration, $program_id, $pics)
     {
         try {
-            $query = 'UPDATE program SET program_name = :program_name, description = :description, program_level = :program_level, price = :price, prerequisites = :prerequisites, duration = :duration WHERE program_id = :program_id';
+            $query = 'UPDATE program SET program_name = :program_name, description = :description, program_level = :program_level, price = :price, prerequisites = :prerequisites, duration = :duration, pics = :pics WHERE program_id = :program_id';
 
             $stmt = $this->conn->prepare($query);
 
@@ -242,6 +242,7 @@ class DB
             $stmt->bindParam(':prerequisites', $prerequisites);
             $stmt->bindParam(':duration', $duration);
             $stmt->bindParam(':program_id', $program_id);
+            $stmt->bindParam(':pics', $pics);
 
             $result = $stmt->execute();
             if ($result == false) {

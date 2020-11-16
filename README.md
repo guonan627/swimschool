@@ -143,9 +143,9 @@ none
 
 ## Current Status
 
-- Frontend - complete
-- Backend - complete all the frontend required APIs and almost admin panel required APIs
-- Admin panel(react) - 90% completed except for a small bug.
+- web app - complete
+- backend - complete all the frontend required APIs and almost admin panel required APIs
+- Admin panel(react) - 90% completed except for a small bug.please check the admin panel at https://github.com/guonan627/swimschool-admin-panel
 
 ## What to do next for improvement if time allowed
 
