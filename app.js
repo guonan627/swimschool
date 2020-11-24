@@ -92,6 +92,7 @@ function fre() {
   show.hide();
   registerpage.style.display = "block";
   localStorage.setItem("lastViewedPage", "registerpage");
+ 
 }
 
 function flogin() {
@@ -99,6 +100,7 @@ function flogin() {
   show.hide();
   loginpage.style.display = "block";
   localStorage.setItem("lastViewedPage", "loginpage");
+
 }
 
 function fho() {
@@ -106,6 +108,7 @@ function fho() {
   show.hide();
   homepage.style.display = "block";
   localStorage.setItem("lastViewedPage", "homepage");
+ 
 }
 
 function fpr() {
@@ -114,6 +117,7 @@ function fpr() {
   programpage.style.display = "block";
   getAllPrograms();
   localStorage.setItem("lastViewedPage", "programpage");
+
 }
 
 function fcl() {
@@ -121,6 +125,7 @@ function fcl() {
   show.hide();
   classpage.style.display = "block";
   localStorage.setItem("lastViewedPage", "classpage");
+ 
 }
 
 function fen() {
@@ -128,6 +133,7 @@ function fen() {
   show.hide();
   enrollpage.style.display = "block";
   localStorage.setItem("lastViewedPage", "enrollpage");
+ 
 }
 
 function fmy() {
@@ -136,6 +142,7 @@ function fmy() {
   myclasspage.style.display = "block";
   getMyClass();
   localStorage.setItem("lastViewedPage", "myclasspage");
+  
 }
 
 function fse() {
@@ -143,6 +150,7 @@ function fse() {
   show.hide();
   settingpage.style.display = "block";
   localStorage.setItem("lastViewedPage", "settingpage");
+ 
 }
 
 function revealPasswords() {
