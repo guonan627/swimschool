@@ -31,7 +31,7 @@ try {
         $last = strtotime($_SESSION['LAST_CALL']);
         $curr = strtotime(date("Y-m-d h:i:s")); //record the time current request
         $sec = abs($curr - $last);  // calculate how many seconds past from the last request
-        if ($sec <= 1) {
+        if ($sec <= 2) {
             throw new APIException("Rate limit exceeded");
             http_response_code(429);
             return false;
@@ -40,7 +40,7 @@ try {
     }
     $_SESSION['LAST_CALL'] = date("Y-m-d h:i:s");
 
-    // session rate limiter: 1000 requests/day
+    // session rate limiter: 500 requests/day
     if ($_SESSION['sessionObj']->oneDayRateLimit() === false) { //calculate in se.php
         throw new APIException("Daily rate limit exceeded");
         die();

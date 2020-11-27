@@ -70,7 +70,7 @@ class sessionObject
         }
         $this->_requestCounter++; // add 1 time to the counter
         $hours = (time() - $this->_startTime / 3600); // calculate how many hours past from the first request
-        if ($hours < 24 && $this->_requestCounter > 1000) { // rate limit control if it is over 24 hours 
+        if ($hours < 24 && $this->_requestCounter > 500) { // rate limit control if it is over 24 hours 
             return false;
         } else if ($hours >= 24) { // counter go back to 0 if it is over 24 hours
             $this->_requestCounter = 0;

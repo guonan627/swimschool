@@ -5,6 +5,20 @@ This web App is an online class enrolment system supporting the Bright Star Swim
 ENTITIES: admin, unenrolled_student, enrolled_student, class, program, photo
 USERS: anonymous, admin,student
 
+## Github Address
+
+- web app - https://github.com/guonan627/swimschool
+- Admin panel - https://github.com/guonan627/swimschool-admin-panel
+
+## Deployed Online
+
+- Web app is deployed on https://nanguo666.com/swimschool/ using VipControl shared web hosting(Apache)
+- Admin panel is deployed on https://swimschool-admin-panel.vercel.app/ using vercel.com(Nginx)
+
+## Installation Guidance
+
+change api address in var api = "http://localhost/swimschool/api/api.php" in app.js;
+
 ## Business Rules
 
 - Any anonymous can browse the teaching programs introduction and find all classes filtered by program and class time.
@@ -22,16 +36,20 @@ USERS: anonymous, admin,student
 
 ## Technologies
 
-- The website will decouple the front end (web app and admin panel) and the back end (web services). Web app is for public use. All anonymous users and registered students will use the web app to browse, enrol classes and download photos from the app. Admin panel is for admin staff to mange the programs, classes and enrolled students.
-- Web services will provide APIs for web app and admin panel to perform CRUD operations on the database. Web Service will support the activities of a user, but users must authenticate to use all web functions.
-- A web app is developed using a client-side framework (materialized) to speed the development process with mobile components.
-- Administration panel will be developed using React.
+- The website decouples the front end (web app and admin panel) and the back end (web services). Web app is for public use. All anonymous users and registered students will use the web app to browse, enrol classes and download photos from the app. Admin panel is for admin staff to mange the programs, classes and enrolled students.
+- Web services provide APIs for web app and admin panel to perform CRUD operations on the database. Web Service will support the activities of a user, but users must authenticate to use all web functions.
+- Fetch is used in Javascript to transfer data.
+- The APIs are developed by PHP(7.3.9) and MySQL(5.7.26)
+- The web app is using a client-side framework Materialized(1.0.0) to speed the development process with mobile components.
+- AddressFinder API used to provide better user experience when fill in web forms.
+- Administration panel is developed by React("^17.0.1") integrated with Axios("^0.21.0") and React-Router-Dom("^5.2.0").
+- Administration panel is using Bootstarp(4.5.x) to build up the web layout.
 
 ## API setting
 
 #### Sign Up:
 
-**POST** _http://localhost:8888/swimschool/api/api.php?action=signup_  
+**POST** _http://localhost/swimschool/api/api.php?action=signup_  
 **Required fields:**
 
 - username
@@ -40,7 +58,7 @@ USERS: anonymous, admin,student
 
 #### Login:
 
-**POST** _http://localhost:8888/swimschool/api/api.php?action=login_  
+**POST** _http://localhost/swimschool/api/api.php?action=login_  
 **Required fields:**
 
 - username
@@ -48,26 +66,26 @@ USERS: anonymous, admin,student
 
 #### Logout:
 
-**POST** _http://localhost:8888/swimschool/api/api.php?action=logout_  
+**POST** _http://localhost/swimschool/api/api.php?action=logout_  
 **Required fields:**
 none
 
 #### Get all programs:
 
-**GET** _http://localhost:8888/swimschool/api/api.php?action=allprograms_  
+**GET** _http://localhost/swimschool/api/api.php?action=allprograms_  
 **Required fields:**
 none
 
 #### Get single program by programID: (for admin panel)
 
-**GET** _http://localhost:8888/swimschool/api/api.php?action=findprogram&program_id=1_  
+**GET** _http://localhost/swimschool/api/api.php?action=findprogram&program_id=1_  
 **Required fields:**
 
 - program_id (in URL)
 
 #### Create prorgram: (for admin panel)
 
-**POST** _http://localhost:8888/swimschool/api/api.php?action=addprogram_  
+**POST** _http://localhost/swimschool/api/api.php?action=addprogram_  
 **Required fields:**
 
 - program_name
@@ -79,7 +97,7 @@ none
 
 #### Update program: (for admin panel)
 
-**PATCH** _http://localhost:8888/swimschool/api/api.php?action=editprogram&program_id=1_  
+**PATCH** _http://localhost/swimschool/api/api.php?action=editprogram&program_id=1_  
 **Required fields:**
 
 - program_id (in URL)
@@ -92,7 +110,7 @@ none
 
 #### Delete program: (for admin panel)
 
-**DELETE** _http://localhost:8888/swimschool/api/api.php?action=removeprogram&program_id=11_  
+**DELETE** _http://localhost/swimschool/api/api.php?action=removeprogram&program_id=11_  
 **Required fields:**
 
 - program_id (in URL)
@@ -113,7 +131,7 @@ none
 
 #### Enroll a class:
 
-**POST** _http://localhost:8888/swimschool/api/api.php?action=enroll_  
+**POST** _http://localhost/swimschool/api/api.php?action=enroll_  
 **Required fields:**
 
 - login_id
@@ -129,7 +147,7 @@ none
 
 #### Check my enrolled class by userid:
 
-**GET** _http://localhost:8888/swimschool/api/api.php?action=myenrolledclass&userid=19_
+**GET** _http://localhost/swimschool/api/api.php?action=myenrolledclass&userid=19_
 **Required fields:**
 
 - userid(in URL)
@@ -139,19 +157,22 @@ none
 - Logging feature that accounts for every request with IP, browser, timestamp and action and record them in the database and txt document
 - Rate limit to control one request per second per user session
 - Limit per session request to 1,000 in a 24hour period
-- get userid from backend when enroll a class and view the enrolled class instead of from localstorage
+- Get userid from backend when enroll a class and view the enrolled class instead of from localstorage
 
-## Current Status
+## What to do next (roadmap)
 
-- web app - complete
-- backend - complete all the frontend required APIs and almost admin panel required APIs
-- Admin panel(react) - 90% completed except for a small bug.please check the admin panel at https://github.com/guonan627/swimschool-admin-panel
-
-## What to do next for improvement if time allowed
+### web app
 
 - Jason Web Token/OAuth to be used to increase authentication security
-- add "view my classesmates" and "view class-time photos" features in "my class" page
-- add the bithday input validation when fill in enroll form (must be over the program age requirement )
-- add the rating feature linking with each enrolled class.
-- allow one login user to enroll several classes instead of only one to make the app more practical.
-- add more features in "my account setting" page, for example, change user passwords
+- Add "view my classesmates" and "view class-time photos" features in "my class" page
+- Allow enrolled user to cancel their enrollment in "my class" page
+- Add the bithday input validation when fill in enroll form (must be over the program age requirement )
+- Add the rating feature linking with each enrolled class.
+- Allow one login user to enroll several classes instead of only one to make the app more practical.
+- Add more features in "my account setting" page, for example, change user passwords
+
+### admin panel
+
+- Finalize CRUD classes
+- Finalize CRUD enrollment
+- Bueatify the web if needed.
