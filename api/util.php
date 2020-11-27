@@ -124,9 +124,9 @@ function logFile($action)
 //     throw new APIException("No referrer");
 // }
 
-// // whitelist referral
+// whitelist referral
 // function domainLock(){
-//     if ((strops($this->referrer,'localhost:8888') !== false)||
+//     if ((strops($this->referrer,'localhost') !== false)||
 //         (strops($this->referrer,'swimschool') !== false)) {
 //             return true;
 //         } else {
