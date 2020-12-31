@@ -1,6 +1,6 @@
 ## Introduction
 
-This web App is an online class enrolment system supporting the Bright Star Swim School’s offline swim classes provided in the local swimming pool.
+This web App is an online enrolment system supporting the Bright Star Swim School’s offline swim classes provided in the local swimming pool.
 
 ENTITIES: admin, unenrolled_student, enrolled_student, class, program, photo
 USERS: anonymous, admin,student
